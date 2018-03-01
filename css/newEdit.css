@@ -1,0 +1,92 @@
+body {
+font-family:Arial;
+}
+input {
+font-family:Arial;
+font-size:14px;
+}
+label{
+font-family:Arial;
+font-size:14px;
+color:#000000;
+}
+.tblSaveForm {
+border-top:2px #999999 solid;
+background-color: #f8f8f8;
+}
+
+.tableheader {
+background-color: #fedc4d;
+}
+.tablerow {
+background-color: #A7D6F1;
+color:white;
+}
+.btnSubmit {
+background-color:#fd9512;
+padding:5px;
+border-color:#FF6600;
+border-radius:4px;
+color:white;
+}
+.message {
+color: #FF0000;
+text-align: center;
+width: 100%;
+}
+.txtField {
+padding: 5px;
+border:#000000 1px solid;
+border-radius:4px;
+}
+ 
+.evenRow
+{
+    padding: 8px;
+    background: #e8edff;
+    border-top: 1px solid #fff;
+    border-right: 1px dotted black;
+    border-left: 1px solid black;
+    width:12.5%;
+    color: black;
+}
+
+.evenRow:hover {
+background-color: #d0dafd;
+}
+.oddRow 
+{
+    padding: 8px;
+    background: #e8edff;
+    border-top: 1px solid #fff;
+    border-right: 1px dotted black;
+    border-left: 1px solid black;
+    width:12.5%;
+    color: black;
+}
+ 
+.oddRow:hover{
+    background: #d0dafd;
+}
+
+
+.tblListForm {
+border-top:2px #999999 solid;
+}
+.listheader {
+background-color: #fedc4d;
+font-size:12px;
+font-weight:bold;
+}
+.link{
+text-decoration:none;
+color:#5e8fc7;
+font-size:11px;
+}
+
+.modHeader
+ {
+size:10;
+color: #333333;
+font-family: Copperplate / Copperplate Gothic Light, sans-serif;
+}
