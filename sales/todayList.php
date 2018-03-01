@@ -12,9 +12,9 @@ if(isset($_SESSION["user_name"]))
 	}
 
 	if($_GET['ar'] != 'all')
-		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM sales_entry WHERE ar_id='" . $_GET['ar'] . "' and entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
+		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar_id,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM sales_entry WHERE ar_id='" . $_GET['ar'] . "' and entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
 	else
-		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM sales_entry WHERE entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
+		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar_id,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM sales_entry WHERE entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
 ?>
 
 <html>
@@ -85,7 +85,7 @@ if(isset($_SESSION["user_name"]))
 
 
 
-<td ><a href="edit.php?sales_id=<?php echo $row["sales_id"]; ?>"</a><?php echo $row["ar"]; ?></td>
+<td ><a href="edit.php?sales_id=<?php echo $row["sales_id"]; ?>"</a><?php echo $arMap[row["ar_id"]]; ?></td>
 <td><?php echo $row["truck_no"]; ?></td>
 <td align="center"><?php echo $row["srp"]; ?></td>
 <td align="center"><?php echo $row["srh"]; ?></td>
@@ -100,7 +100,7 @@ if(isset($_SESSION["user_name"]))
 
 <td>
 <a href="delete.php?sales_id=<?php echo $row["sales_id"]; ?>"  class="link" onclick="return confirm('Are you sure you want to permanently delete this entry ?')">
-		<img alt='Delete' title='Delete' src='images/delete.png' width='25px' height='25px'hspace='10' /></a>
+		<img alt='Delete' title='Delete' src='../images/delete.png' width='25px' height='25px'hspace='10' /></a>
 </td>
 </tr>
 
