@@ -5,7 +5,7 @@ if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
 
-	$arObjects = mysqli_query($con,"SELECT id,ar_name FROM ar_details") or die(mysqli_error($con));	
+	$arObjects = mysqli_query($con,"SELECT id,ar_name FROM ar_details order_by ar_name ASC") or die(mysqli_error($con));	
 	foreach($arObjects as $ar)
 	{
 		$arMap[$ar['id']] = $ar['ar_name']; 
@@ -85,7 +85,7 @@ if(isset($_SESSION["user_name"]))
 
 
 
-<td ><a href="edit.php?sales_id=<?php echo $row["sales_id"]; ?>"</a><?php echo $arMap[row["ar_id"]]; ?></td>
+<td ><a href="edit.php?sales_id=<?php echo $row["sales_id"]; ?>"</a><?php echo $arMap[$row["ar_id"]]; ?></td>
 <td><?php echo $row["truck_no"]; ?></td>
 <td align="center"><?php echo $row["srp"]; ?></td>
 <td align="center"><?php echo $row["srh"]; ?></td>
