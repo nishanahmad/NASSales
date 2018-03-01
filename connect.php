@@ -1,5 +1,5 @@
 <?php	
-	$con=mysqli_connect("139.59.30.47","vqbrfnjbhf","4CE4dusgYs","vqbrfnjbhf");
+	$con=mysqli_connect("localhost","nishan","darussalam123.","nas");
 	// Check connection
 	if ($con->connect_error) 
 	{

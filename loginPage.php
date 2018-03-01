@@ -2,7 +2,7 @@
 <head>
 <div align="center">
 <br><br><br>
-<img src="../NASSales/images/logoBlack.png"  width='300px' height='50px'>
+<img src="images/logoBlack.png"  width='300px' height='50px'>
 </div>
 
 <body>
