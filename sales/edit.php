@@ -152,7 +152,6 @@ $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 
 <div align="center" style="padding-bottom:5px;">
 	<a href="../index.php" class="link"><img alt='Home' title='Home' src='../images/home.png' width='50px' height='50px'/></a>&nbsp;&nbsp;
-	<a href="new.php" class="link"><img alt='Add' title='Add' src='../images/addNew.png' width='50px' height='50px'/></a>&nbsp;
 	<a href="todayList.php?ar=all" class="link"><img alt='List' title='List' src='../images/list_icon.jpg' width='50px' height='50px'/></a>
 	<a href="../modified_by.php?sales_id=<?php echo $row["sales_id"]; ?>"  class="link" >
 		<img align="right" alt= 'Modified By' title='Modified By' src='../images/user.png' width='40px' height='50px'hspace='10'  /></a>
