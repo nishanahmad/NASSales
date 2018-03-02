@@ -26,7 +26,7 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
-<title>NAS DAILY SALES ENTRY</title>
+<title>NEW SALE</title>
 <script>
 var sapCodeList = '<?php echo $sapCodeArray;?>';
 var sapCode_array = JSON.parse(sapCodeList);
@@ -89,7 +89,7 @@ echo "LOGGED USER : ".$_SESSION["user_name"] ;
 <br>
 <table border="0" cellpadding="15" cellspacing="0" width="80%" align="center" style="float:center" class="tblSaveForm">
 <tr class="tableheader">
-<td colspan="4"><div align ="center"><b><font size="4">ADD NEW SALE ENTRY </font><b></td>
+<td colspan="4"><div align ="center"><b><font size="4">NEW SALE</font><b></td>
 </tr>
 
 <tr>

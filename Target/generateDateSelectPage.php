@@ -4,14 +4,12 @@
 session_start();
 if(isset($_SESSION["user_name"]))
 {
-	echo "LOGGED USER : ".$_SESSION["user_name"] ;	
-
 	require '../connect.php';		
 	if(count($_POST)>0)
 	{
 		$month = $_POST['month'];
 		$year = $_POST['year'];
-		header("Location:updateOncePage.php?month=$month&year=$year");
+		header("Location:generatePage.php?month=$month&year=$year");
 	}	
 ?>
 

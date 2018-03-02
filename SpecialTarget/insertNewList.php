@@ -10,18 +10,21 @@ if(isset($_SESSION["user_name"]))
 		$fromDate = $_GET['fromDate'];
 		$toDate = $_GET['toDate'];				
 
-		$selectAr = "SELECT ar_name FROM ar_details ORDER BY ar_name asc";
-		$result = mysqli_query($con, $selectAr) or die(mysqli_error($con));		 		
+		$arObjects = mysqli_query($con, "SELECT id,ar_name FROM ar_details WHERE isActive = 1 ORDER BY ar_name asc") or die(mysqli_error($con)) or die(mysqli_error($con));		 						
 		
 		if(count($_POST) > 0)
 		{
- 			foreach($_POST as $ar => $special_target)
+			foreach($_POST as $arId => $special_target)
 			{
-				$ar = str_replace('_',' ',$ar); 
-				$insertQuery = "INSERT INTO ar_calculation_special_target (ar_name,fromDate,toDate,special_target) VALUES ('$ar','$fromDate','$toDate','$special_target')";
-				$result2 = mysqli_query($con, $insertQuery) or die(mysqli_error($con));		 						
+				if(is_numeric($arId))
+				{
+					$insertQuery = "INSERT INTO ar_calculation_special_target (ar_id,fromDate,toDate,special_target) VALUES ('$arId','$fromDate','$toDate','$special_target')";
+					$insert = mysqli_query($con, $insertQuery) or die(mysqli_error($con));		 											
+				}
+
 			}
-			header("Location:../index.php"); 
+			$lock = mysqli_query($con, "INSERT INTO lock_specialtarget (from_date,to_date,locked) VALUES ('$fromDate','$toDate',1)") or die(mysqli_error($con));		 											
+			header("Location:../index.php");
 		}	
 	}
 ?>
@@ -127,13 +130,12 @@ h1 span {
 <form method="post" action="">
 <table align="center" class="responstable">
 <tr><th style="width:25%">AR NAME</th><th style="width:25%;text-align:center;">SPECIAL TARGET</th></tr>					<?php
-while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
+foreach($arObjects as $ar) 
 {
-	$arname = $row['ar_name'];
 	?>				
 	<tr>
-	<td><label align="center"><?php echo $arname; ?></td>	
-	<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arname;?>" value="0"></td>	
+	<td><label align="center"><?php echo $ar['ar_name']; ?></td>	
+	<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $ar['id'];?>" value="0"></td>	
 	</tr>																												<?php
 }						
 																								?>
@@ -148,6 +150,6 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC))
 <?php
 }
 else
-	header("Location:loginPage.php");
+	header("../index.php");
 
 ?>

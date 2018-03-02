@@ -10,7 +10,15 @@ if(isset($_SESSION["user_name"]))
 	$year = $_GET['year'];
 	$month = $_GET['month'];
 
-	$sql = "SELECT ar_name, target, rate, payment_perc, company_target FROM ar_calculation WHERE year='$year' AND Month='$month' order by ar_name asc";
+	$arObjects = mysqli_query($con, "SELECT id,ar_name FROM ar_details WHERE isActive = 1 ORDER BY ar_name ASC") or die(mysqli_error($con));
+	foreach($arObjects as $ar)
+	{
+		$arMap[$ar['id']] = $ar['ar_name'];
+	}	
+	
+	$array = implode("','",array_keys($arMap));	
+	
+	$sql = "SELECT ar_id, target, rate, payment_perc, company_target FROM ar_calculation WHERE year='$year' AND Month='$month' AND ar_id IN ('$array')";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con));		 
 ?>
 
@@ -160,7 +168,7 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 		</tr>					<?php
 	while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
 	{
-		$arname = $row['ar_name'];
+		$arId = $row['ar_id'];
 		$target = $row['target'];
 		$rate = $row['rate'];
 		$pp = $row['payment_perc'];
@@ -168,11 +176,11 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 
 		?>				
 		<tr>
-			<td><label align="center"><?php echo $arname; ?></td>	
-			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arname.'-target';?>" value="<?php echo $target; ?>"></td>	
-			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arname.'-rate';?>" value="<?php echo $rate; ?>"></td>		
-			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arname.'-pp';?>" value="<?php echo $pp; ?>"></td>		
-			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arname.'-companyTarget';?>" value="<?php echo $company_target; ?>"></td>					
+			<td><label align="center"><?php echo $arMap[$arId]; ?></td>	
+			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-target';?>" value="<?php echo $target; ?>"></td>	
+			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-rate';?>" value="<?php echo $rate; ?>"></td>		
+			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-pp';?>" value="<?php echo $pp; ?>"></td>		
+			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-companyTarget';?>" value="<?php echo $company_target; ?>"></td>					
 		</tr>																												<?php
 	}						
 																									?>

@@ -18,7 +18,14 @@ if(isset($_SESSION["user_name"]))
 		$toDate = $dates['to_date'];		
 	}	
 
-	$sql = "SELECT ar_name, special_target FROM ar_calculation_special_target WHERE fromDate='$fromDate' AND toDate='$toDate' order by ar_name asc";
+	$arObjects = mysqli_query($con, "SELECT id,ar_name FROM ar_details WHERE isActive = 1 ORDER BY ar_name ASC") or die(mysqli_error($con));
+	foreach($arObjects as $ar)
+	{
+		$arMap[$ar['id']] = $ar['ar_name'];
+	}	
+	
+	$array = implode("','",array_keys($arMap));
+	$sql = "SELECT ar_id, special_target FROM ar_calculation_special_target WHERE fromDate='$fromDate' AND toDate='$toDate' AND ar_id IN ('$array')";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con));		 
 ?>
 
@@ -139,12 +146,12 @@ h1 span {
 <tr><th style="width:25%">AR NAME</th><th style="width:25%;text-align:center;">SPECIAL TARGET</th></tr>					<?php
 while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
 {
-	$arname = $row['ar_name'];
+	$arId = $row['ar_id'];
 	$special_target = $row['special_target'];
 	?>				
 	<tr>
-	<td><label align="center"><?php echo $arname; ?></td>	
-	<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arname.'-special_target';?>" value="<?php echo $special_target; ?>"></td>	
+	<td><label align="center"><?php echo $arMap[$arId]; ?></td>	
+	<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-special_target';?>" value="<?php echo $special_target; ?>"></td>	
 	</tr>																												<?php
 }						
 																								?>
@@ -158,7 +165,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC))
 	$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
 	if($row['locked'] != true && count($row) > 0)
 	{
-?>		<div align="center"><input type="submit" name="submit" value="Submit"></div>		
+?>		<div align="center"><input type="submit" name="submit" value="Update"></div>		
 <?php	
 	}		
 ?>
@@ -168,6 +175,6 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC))
 <?php
 }
 else
-	header("Location:loginPage.php");
+	header("../Location:index.php");
 
 ?>

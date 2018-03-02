@@ -14,10 +14,10 @@ if(isset($_SESSION["user_name"]))
 	foreach($_POST as $key => $value)
 	{
 		$arr = explode("-",$key);
-		$arName = $arr[0];
+		$arId = $arr[0];
 		if($arr[1] == 'special_target')
 		{
-			$sql="UPDATE ar_calculation_special_target SET special_target = '$value' WHERE ar_name = '$arName' AND fromDate = '$fromDate' AND toDate = '$toDate' ";
+			$sql="UPDATE ar_calculation_special_target SET special_target = '$value' WHERE ar_id = '$arId' AND fromDate = '$fromDate' AND toDate = '$toDate' ";
 			$result = mysqli_query($con, $sql) or die(mysqli_error($con));				   
 		}
 	}

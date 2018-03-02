@@ -7,7 +7,7 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
-<title>NAS SALES HOME PAGE</title>
+<title>HOME</title>
 <link rel="stylesheet" type="text/css" href="css/index.css" />
 </head>
 <body>
@@ -30,25 +30,24 @@ if(isset($_SESSION["user_name"]))
 <?php
 	if($_SESSION["role"] == 'admin')
 	{
-?>	<button  class="btn lg ghost" onclick="location.href='adminPage.php'"><b>ADMIN PANEL</b></button>
+?>	<button  class="btn lg ghost" onclick="location.href='admin/'"><b>ADMIN PANEL</b></button>
     <br><br><br>		
 <?php	
 	}
 ?>	
-	<button  class="btn lg ghost" onclick="location.href='sales/new.php'"><b>ADD NEW SALES</b></button>
+	<button  class="btn lg ghost" onclick="location.href='sales/new.php'"><b>ADD NEW SALE</b></button>
     <br><br><br>
 
-	<button  class="btn lg ghost" onclick="location.href='sales/todayList.php?ar=all'"><b>LIST TODAY'S SALES</b></button>
+	<button  class="btn lg ghost" onclick="location.href='sales/todayList.php?ar=all'"><b>TODAY SALES</b></button>
     <br><br><br>
+
+	<button  class="btn lg ghost" onclick="location.href='sales/list.php?ar=all'"><b>ALL SALES</b></button>
+    <br><br><br><br>
 	
 	<button  class="btn lg ghost" onclick="location.href='company'"><b>COMPANY SALE</b></button>
     <br><br><br>	
-
-	<button  class="btn lg ghost" onclick="location.href='sales/list.php?ar=all'"><b>LIST ALL SALES</b></button>
-    <br><br><br><br>
-
 		
-   	<button  class="btn lg ghost" onclick="location.href='Target/ar_detailList.php'"><b>UPDATE AR DETAILS</b></button>
+   	<button  class="btn lg ghost" onclick="location.href='ar/ar_detailList.php'"><b>AR DETAILS</b></button>
     <br><br><br>	
    	
    	<button  class="btn lg ghost" onclick="location.href='Target/'"><b>TARGET & POINTS</b></button>

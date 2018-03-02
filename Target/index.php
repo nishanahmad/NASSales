@@ -31,10 +31,10 @@ if(isset($_SESSION["user_name"]))
    	<button  class="btn lg ghost" onclick="location.href='updatePage.php?year=<?php echo $year;?>&month=<?php echo $month;?>'"><b>VIEW / UPDATE TARGET & RATE</b></button>
     <br><br><br>	
 
-   	<button  class="btn lg ghost" onclick="location.href='dateSelectForGeneration.php'"><b>GENERATE TARGET & RATE</b></button>
+   	<button  class="btn lg ghost" onclick="location.href='generateDateSelectPage.php'"><b>GENERATE TARGET & RATE</b></button>
     <br><br><br>
 
-    <button  class="btn lg ghost" onclick="location.href='generatePointsTable.php?month=<?php echo $month;?>&year=<?php echo $year;?>'"><b>VIEW POINTS</b></button>
+    <button  class="btn lg ghost" onclick="location.href='calculatePointsTable.php?month=<?php echo $month;?>&year=<?php echo $year;?>'"><b>VIEW POINTS</b></button>
     <br><br><br>
 	
 	</div>

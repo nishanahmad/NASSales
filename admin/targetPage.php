@@ -64,11 +64,11 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC))
 	<td class="monthFont" width="70%"><?php echo $month;?></td>									<?php 
 		if($row['locked'] == 1)
 		{
-?> 			<td align="center"><a href='unlock.php?year=<?php echo $year;?>&month=<?php echo $row['month'];?>'><img src='../images/locked.png' width='45px' height='45px'></a></td><tr>
+?> 			<td align="center"><a href='targetUnlock.php?year=<?php echo $year;?>&month=<?php echo $row['month'];?>'><img src='../images/locked.png' width='45px' height='45px'></a></td><tr>
 <?php	}				
 		else
 		{
-?> 			<td align="center"><a href='lock.php?year=<?php echo $year;?>&month=<?php echo $row['month'];?>'><img src='../images/unlocked.png' width='45px' height='45px'></a></td><tr>			
+?> 			<td align="center"><a href='targetLock.php?year=<?php echo $year;?>&month=<?php echo $row['month'];?>'><img src='../images/unlocked.png' width='45px' height='45px'></a></td><tr>			
 <?php	}	
 }																			?>	
 </table>
