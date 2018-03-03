@@ -181,7 +181,7 @@ $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 <tr>
 <td><label>AR</label></td>
 <td><select name="ar" required class="txtField">
-    <option value = "<?php echo $row['ar'];?>"><?php echo $arMap[$row['ar_id']];?></option>
+    <option value = "<?php echo $row['ar_id'];?>"><?php echo $arMap[$row['ar_id']];?></option>
     <?php
 		foreach($arMap as $arId => $arName)
 		{?>
