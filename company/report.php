@@ -19,7 +19,7 @@ if(isset($_SESSION["user_name"]))
 		$date = date("d-m-Y");
 		$sqlDate = date("Y-m-d", strtotime($date));
 	}	
-	$nasQuery = "SELECT ar, SUM(srp), SUM(srh), SUM(f2r) FROM sales_entry WHERE entry_date ='$sqlDate' GROUP BY ar";
+	$nasQuery = "SELECT ar, SUM(srp), SUM(srh), SUM(f2r) FROM nas_sale WHERE entry_date ='$sqlDate' GROUP BY ar";
 	$nasResult = mysqli_query($con, $nasQuery) or die(mysqli_error($con));
 	while($nas = mysqli_fetch_array($nasResult,MYSQLI_ASSOC))
 	{

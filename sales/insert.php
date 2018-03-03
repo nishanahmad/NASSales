@@ -34,7 +34,7 @@ if(isset($_SESSION["user_name"]))
 	{
 		$total = $srp + $srh + $f2r;		
 		$entered_on = date('Y-m-d H:i:s');	
-		$sql="INSERT INTO sales_entry (entry_date, ar_id, truck_no, srp, srh, f2r, return_bag, remarks, bill_no, customer_name, customer_phone, address1, address2,entered_by,entered_on)
+		$sql="INSERT INTO nas_sale (entry_date, ar_id, truck_no, srp, srh, f2r, return_bag, remarks, bill_no, customer_name, customer_phone, address1, address2,entered_by,entered_on)
 			 VALUES
 			 ('$newDate', '$arId', '$truck', '$srp', '$srh', '$f2r', '$return', '$remarks', '$bill', '$customerName', '$customerPhone', '$address1', '$address2', '$entered_by', '$entered_on')";
 

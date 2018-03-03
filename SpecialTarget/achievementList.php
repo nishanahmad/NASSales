@@ -40,7 +40,7 @@ foreach($ar_detail as $ar)
 		$mainArray[$arId]['actual_sales'] = 0;
 		$mainArray[$arId]['percentage'] = 0;
 
-		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM sales_entry WHERE entry_date >= '$fromDate'
+		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
 																AND entry_date <= '$toDate'
 																AND ar_id = '$arId'
 																AND bill_no not like '%can%' GROUP BY ar_id")

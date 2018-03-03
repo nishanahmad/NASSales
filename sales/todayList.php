@@ -12,9 +12,9 @@ if(isset($_SESSION["user_name"]))
 	}
 
 	if($_GET['ar'] != 'all')
-		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar_id,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM sales_entry WHERE ar_id='" . $_GET['ar'] . "' and entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
+		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar_id,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM nas_sale WHERE ar_id='" . $_GET['ar'] . "' and entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
 	else
-		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar_id,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM sales_entry WHERE entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
+		$result = mysqli_query($con,"SELECT sales_id, entry_date,ar_id,truck_no,srp,srh,f2r,remarks, bill_no, customer_name, customer_phone, address1, address2 FROM nas_sale WHERE entry_date = CURDATE() order by bill_no asc  ") or die(mysqli_error($con));
 ?>
 
 <html>

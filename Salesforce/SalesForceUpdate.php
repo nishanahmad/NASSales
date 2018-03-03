@@ -39,7 +39,7 @@ while($row = mysqli_fetch_array($ar_query,MYSQLI_ASSOC))
 	$cstl = 0;
 	$ar = $row["ar_name"];
 	$salesforce_id = $row["salesforce_id"];
-	$sum_query = mysqli_query($con,"SELECT srp,srh,f2r,return_bag FROM sales_entry WHERE entry_date = '$date' AND ar = '$ar' ") or die(mysqli_error($con));	
+	$sum_query = mysqli_query($con,"SELECT srp,srh,f2r,return_bag FROM nas_sale WHERE entry_date = '$date' AND ar = '$ar' ") or die(mysqli_error($con));	
 	while($sales = mysqli_fetch_array($sum_query,MYSQLI_ASSOC))
 	{
 		$lpp = $lpp + $sales["srp"];

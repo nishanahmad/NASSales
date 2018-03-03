@@ -121,7 +121,7 @@ function rerender()
 				$rate = $row['rate'];
 				$arId = $row['ar_id'];
 
-				$sales = mysqli_query($con,"SELECT SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM sales_entry WHERE '$year' = year(`entry_date`) 
+				$sales = mysqli_query($con,"SELECT SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) 
 															AND '$month' = month(`entry_date`)
 															AND ar_id = '$arId'
 															AND bill_no not like '%can%'")

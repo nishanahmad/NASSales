@@ -22,14 +22,14 @@ if(isset($_SESSION["user_name"]))
 // getting total number records without any search
 
 	$sql = "SELECT sales_id,entry_date, ar,truck_no,srp,srh,f2r,bill_no,customer_name,remarks";
-	$sql.=" FROM sales_entry ORDER BY entry_date DESC";
+	$sql.=" FROM nas_sale ORDER BY entry_date DESC";
 	$query=mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 26');	
 	$totalData = mysqli_num_rows($query);
 	$totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
 
 
 	$sql = "SELECT sales_id,entry_date, ar,truck_no,srp,srh,f2r,bill_no,customer_name,remarks";
-	$sql.=" FROM sales_entry where 1=1  ";
+	$sql.=" FROM nas_sale where 1=1  ";
 
 
 

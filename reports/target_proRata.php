@@ -41,7 +41,7 @@ if(isset($_SESSION["user_name"]))
 		$companyTargetMap[$target['ar_id']] = $target['company_target'];
 	}	
 	
-	$salesList = mysqli_query($con, "SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM sales_entry WHERE YEAR(entry_date) = $year AND MONTH(entry_date) = $month AND ar_id IN ('$array') GROUP BY ar_id" ) or die(mysqli_error($con));
+	$salesList = mysqli_query($con, "SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE YEAR(entry_date) = $year AND MONTH(entry_date) = $month AND ar_id IN ('$array') GROUP BY ar_id" ) or die(mysqli_error($con));
 
 	$mainarray = array();
 	foreach($salesList as $arSale)

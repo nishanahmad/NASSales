@@ -7,7 +7,7 @@ echo "LOGGED USER : ".$_SESSION["user_name"] ;
 
 require 'connect.php';
 
-$result = mysqli_query($con,"SELECT * FROM sales_entry WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));				 
+$result = mysqli_query($con,"SELECT * FROM nas_sale WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));				 
 		 
 $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 ?>

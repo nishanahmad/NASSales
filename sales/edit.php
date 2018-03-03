@@ -19,14 +19,14 @@ if(count($_POST)>0)
 	$originalDate = $_POST["entryDate"];
 	$newDate = date("Y-m-d", strtotime($originalDate)); 
 
-	$result1 = mysqli_query($con,"SELECT * FROM sales_entry WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
+	$result1 = mysqli_query($con,"SELECT * FROM nas_sale WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	$row1= mysqli_fetch_array($result1,MYSQLI_ASSOC);
 	
 	if ($row1["entry_date"] != $newDate)
 	{   
 		$entry_date_dt = date('Y-m-d H:i:s'); 
 		$entry_date_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET entry_date_mod='$entry_date_mod', entry_date_dt='$entry_date_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET entry_date_mod='$entry_date_mod', entry_date_dt='$entry_date_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}	
 
@@ -35,7 +35,7 @@ if(count($_POST)>0)
 	{
 		$truck_no_dt = date('Y-m-d H:i:s'); 
 		$truck_no_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET truck_no_mod='$truck_no_mod', truck_no_dt='$truck_no_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET truck_no_mod='$truck_no_mod', truck_no_dt='$truck_no_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -45,7 +45,7 @@ if(count($_POST)>0)
 		$srp_mod = $_SESSION["user_name"];
 		$total = $_POST["srp"] - $row1["srp"];
 		
-		$query = mysqli_query($con,"UPDATE sales_entry SET srp_mod='$srp_mod', srp_dt='$srp_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET srp_mod='$srp_mod', srp_dt='$srp_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -55,7 +55,7 @@ if(count($_POST)>0)
 		$srh_mod = $_SESSION["user_name"];
 		$total = $_POST["srh"] - $row1["srh"];
 
-		$query = mysqli_query($con,"UPDATE sales_entry SET srh_mod='$srh_mod', srh_dt='$srh_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET srh_mod='$srh_mod', srh_dt='$srh_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -66,7 +66,7 @@ if(count($_POST)>0)
 		$f2r_mod = $_SESSION["user_name"];
 		$total = $_POST["f2r"] - $row1["f2r"];
 
-		$query = mysqli_query($con,"UPDATE sales_entry SET f2r_mod='$f2r_mod', f2r_dt='$f2r_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET f2r_mod='$f2r_mod', f2r_dt='$f2r_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -74,7 +74,7 @@ if(count($_POST)>0)
 	{
 		$remarks_dt = date('Y-m-d H:i:s'); 
 		$remarks_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET remarks_mod='$remarks_mod', remarks_dt='$remarks_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET remarks_mod='$remarks_mod', remarks_dt='$remarks_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -82,7 +82,7 @@ if(count($_POST)>0)
 	{
 		$bill_no_dt = date('Y-m-d H:i:s'); 
 		$bill_no_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET bill_no_mod='$bill_no_mod', bill_no_dt='$bill_no_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET bill_no_mod='$bill_no_mod', bill_no_dt='$bill_no_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -90,7 +90,7 @@ if(count($_POST)>0)
 	{
 		$customer_name_dt = date('Y-m-d H:i:s'); 
 		$customer_name_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET customer_name_mod='$customer_name_mod', customer_name_dt='$customer_name_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET customer_name_mod='$customer_name_mod', customer_name_dt='$customer_name_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -98,7 +98,7 @@ if(count($_POST)>0)
 	{
 		$customer_phone_dt = date('Y-m-d H:i:s'); 
 		$customer_phone_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET customer_phone_mod='$customer_phone_mod', customer_phone_dt='$customer_phone_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET customer_phone_mod='$customer_phone_mod', customer_phone_dt='$customer_phone_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -106,7 +106,7 @@ if(count($_POST)>0)
 	{
 		$address1_dt = date('Y-m-d H:i:s');
 		$address1_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET address1_mod='$address1_mod', address1_dt='$address1_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET address1_mod='$address1_mod', address1_dt='$address1_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 
@@ -114,14 +114,14 @@ if(count($_POST)>0)
 	{
 		$address2_dt = date('Y-m-d H:i:s');
 		$address2_mod = $_SESSION["user_name"];
-		$query = mysqli_query($con,"UPDATE sales_entry SET address2_mod='$address2_mod', address2_dt='$address2_dt'
+		$query = mysqli_query($con,"UPDATE nas_sale SET address2_mod='$address2_mod', address2_dt='$address2_dt'
 							        WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 	}
 	
 	
 	
 	
-	$query = mysqli_query($con,"UPDATE sales_entry SET entry_date='$newDate', ar_id='" . $_POST["ar"] . "', truck_no='" . $_POST["truck"] . "',
+	$query = mysqli_query($con,"UPDATE nas_sale SET entry_date='$newDate', ar_id='" . $_POST["ar"] . "', truck_no='" . $_POST["truck"] . "',
 								srp='" . $_POST["srp"] . "', srh='" . $_POST["srh"] . "' , f2r='" . $_POST["f2r"] . "',
 								remarks='" . $_POST["remarks"] . "', bill_no='" . $_POST["bill"] . "', address1='" . $_POST["address1"] . "', 
 								address2='" . $_POST["address2"] . "', customer_name='" . $_POST["customerName"] . "', return_bag='".$_POST["return"]."',
@@ -137,7 +137,7 @@ if(count($_POST)>0)
 	header( "Location: $url" );
 }
 
-$result = mysqli_query($con,"SELECT * FROM sales_entry WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
+$result = mysqli_query($con,"SELECT * FROM nas_sale WHERE sales_id='" . $_GET["sales_id"] . "'") or die(mysqli_error($con));	
 $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 ?>
 

@@ -76,7 +76,7 @@ if(isset($_SESSION["user_name"]))
 </thead>
 <tbody>
 <?php
-	$salesList = mysqli_query($con, "SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r) FROM sales_entry WHERE entry_date >= '$fromDate' AND entry_date <= '$toDate' GROUP BY ar_id" ) or die(mysqli_error($con));
+	$salesList = mysqli_query($con, "SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r) FROM nas_sale WHERE entry_date >= '$fromDate' AND entry_date <= '$toDate' GROUP BY ar_id" ) or die(mysqli_error($con));
 	$srp = 0;
 	$srh = 0;
 	$f2r = 0;
