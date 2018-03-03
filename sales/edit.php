@@ -145,6 +145,7 @@ $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 <head>
 <title>Edit Sale <?php echo $row['sales_id']; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/newEdit.css" />
+<link rel="stylesheet" href="../css/button.css">
 </head>
 <body>
 <form name="frmUser" method="post" action="">
@@ -159,9 +160,10 @@ $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 </div>
 
 <br>
+<div align ="center">
 <table border="0" cellpadding="10" cellspacing="0" width="80%" align="center" class="tblSaveForm">
 <tr class="tableheader">
-<td colspan="4"><div align ="center"><b><font size="4">Edit Sale <?php echo $row['sales_id']; ?> </font><b></td>
+<td colspan="4" style="text-align:center;"><b><font size="4">Edit Sale <?php echo $row['sales_id']; ?> </font><b></td>
 </tr>
 
 <tr>
@@ -235,9 +237,12 @@ $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 </tr>
 
 </table>
+<br><br><br><br>	
+<a href="delete.php?sales_id=<?php echo $row['sales_id'];?>" style="float:right;width:50px;margin-right:150px;" class="btn btn-red" onclick="return confirm('Are you sure you want to permanently delete this entry ?')">DELETE</a>						
 </div>
 </form>
-</body></html>
+</body>
+</html>
 
 <?php
 }

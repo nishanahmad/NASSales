@@ -62,7 +62,6 @@ if(isset($_SESSION["user_name"]))
 <th>REMARKS</th>
 <th>ADDRESS1</th>
 <th>ADDRESS2</th>
-<th>DELETE</th>
 </tr>
 <?php
 	$f2r=0;
@@ -87,12 +86,6 @@ if(isset($_SESSION["user_name"]))
 <td><?php echo $row["remarks"]; ?></td>
 <td><?php echo $row["address1"]; ?></td>
 <td><?php echo $row["address2"]; ?></td>
-
-
-<td>
-<a href="delete.php?sales_id=<?php echo $row["sales_id"]; ?>"  class="link" onclick="return confirm('Are you sure you want to permanently delete this entry ?')">
-		<img alt='Delete' title='Delete' src='../images/delete.png' width='25px' height='25px'hspace='10' /></a>
-</td>
 </tr>
 <?php
 	}
