@@ -23,90 +23,6 @@ if(isset($_SESSION["user_name"]))
 ?>
 
 <html>
-<style>
-.responstable {
-  width: 50%;
-  overflow: hidden;
-  background: #FFF;
-  color: #024457;
-  border-radius: 10px;
-  border: 1px solid #167F92;
-}
-.responstable tr {
-  border: 1px solid #D9E4E6;
-}
-.responstable tr:nth-child(odd) {
-  background-color: #EAF3F3;
-}
-.responstable th {
-  display: none;
-  border: 1px solid #FFF;
-  background-color: #167F92;
-  color: #FFF;
-  padding: 1em;
-}
-.responstable th:first-child {
-  display: table-cell;
-  text-align: left;
-}
-.responstable th:nth-child(2) {
-  display: table-cell;
-}
-.responstable th:nth-child(2) span {
-  display: none;
-}
-.responstable th:nth-child(2):after {
-  content: attr(data-th);
-}
-@media (min-width: 480px) {
-  .responstable th:nth-child(2) span {
-    display: block;
-  }
-  .responstable th:nth-child(2):after {
-    display: none;
-  }
-}
-.responstable td { 
-  display: block;
-  word-wrap: break-word;
-  max-width: 3em;
-}
-.responstable td:first-child {
-  display: table-cell;
-  text-align: left;
-  border-right: 1px solid #D9E4E6;
-}
-@media (min-width: 480px) {
-  .responstable td {
-    border: 1px solid #D9E4E6;
-  }
-}
-.responstable th, .responstable td {
-  text-align: left;
-  margin: .5em 1em;
-}
-@media (min-width: 480px) {
-  .responstable th, .responstable td {
-    display: table-cell;
-    padding: .3em;
-  }
-}
-
-body {
-  font-family: Arial, sans-serif;
-  color: #024457;
-  background: #f2f2f2;
-}
-
-h1 {
-  font-family: Verdana;
-  font-weight: normal;
-  color: #024457;
-}
-h1 span {
-  color: #167F92;
-}
-</style>
 <script type="text/javascript">
 function rerender()
 {
@@ -122,10 +38,10 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 </script>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">
-<script type="text/javascript" language="javascript" src="js/jquery.js"></script>
+<link href="../bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/responstable.css" rel="stylesheet">
+<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
 <title>AR List</title>
-<link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
 <body>
 	<div style="width:100%;">

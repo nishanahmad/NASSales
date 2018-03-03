@@ -51,40 +51,31 @@ if(isset($_SESSION["user_name"]))
 <br>
 <div align="center"><table width="98%" class="table-responsive">
 <tr class="tableheader">
-<td>AR</td>
-<td>TRUCK NO</td>
-<td width="50px">SRP BAG</td>
-<td width="50px;">SRH BAG</td>
-<td width="50px;">F2R BAG</td>
-<td>BILL NO</td>
-<td>CUST. NAME</td>
-<td>CUST. PHONE</td>
-<td>REMARKS</td>
-<td>ADDRESS1</td>
-<td>ADDRESS2</td>
-<td>DELETE</td>
+<th>AR</th>
+<th>TRUCK NO</th>
+<th width="50px">SRP</th>
+<th width="50px;">SRH</th>
+<th width="50px;">F2R</th>
+<th>BILL NO</th>
+<th>CUST. NAME</th>
+<th>CUST. PHONE</th>
+<th>REMARKS</th>
+<th>ADDRESS1</th>
+<th>ADDRESS2</th>
+<th>DELETE</th>
 </tr>
-	<?php
-	
-	$i=0;
+<?php
 	$f2r=0;
 	$srp=0;
 	$srh=0;
 	$total=0;
 	while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
 	{
-		if($i%2==0)
-		$classname="evenRow";
-		else
-		$classname="oddRow";
-	$f2r = $f2r + $row["f2r"];
-	$srp = $srp + $row["srp"];
-	$srh = $srh + $row["srh"];
-	?>
-	
-
-
-
+		$f2r = $f2r + $row["f2r"];
+		$srp = $srp + $row["srp"];
+		$srh = $srh + $row["srh"];
+?>
+<tr>
 <td ><a href="edit.php?sales_id=<?php echo $row['sales_id'];?>"</a><?php echo $arMap[$row["ar_id"]]; ?></td>
 <td><?php echo $row["truck_no"]; ?></td>
 <td align="center"><?php echo $row["srp"]; ?></td>
@@ -103,9 +94,7 @@ if(isset($_SESSION["user_name"]))
 		<img alt='Delete' title='Delete' src='../images/delete.png' width='25px' height='25px'hspace='10' /></a>
 </td>
 </tr>
-
-	<?php
-	$i++;
+<?php
 	}
 	$total = $total + $f2r + $srp + $srh;
 	echo "<div align ='center' style ='font:20px bold;color:#000000'> SRP = $srp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp F2R = $f2r &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp SRH = $srh </div>";
