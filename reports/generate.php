@@ -4,7 +4,7 @@ header('Content-Disposition: attachment; filename=SalesReport.csv');
 
 $output = fopen('php://output', 'w');
 
-require 'connect.php';
+require '../connect.php';
   
 	$fromdate = date("Y-m-d", strtotime($_POST['from']));
 	$todate = date("Y-m-d", strtotime($_POST['to']));;
