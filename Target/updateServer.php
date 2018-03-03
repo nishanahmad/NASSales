@@ -37,7 +37,7 @@ if(isset($_SESSION["user_name"]))
 		}					
 	}
 
-	$lockAR ="UPDATE lock_target SET locked = 1 WHERE  month = '$month' AND year = '$year' ";
+	$lockAR ="UPDATE target_locker SET locked = 1 WHERE  month = '$month' AND year = '$year' ";
 	$LockARresult = mysqli_query($con, $lockAR) or die(mysqli_error($con));				   	
 	
 	header( "Location: ../index.php" );

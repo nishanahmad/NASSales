@@ -25,7 +25,7 @@ if(isset($_SESSION["user_name"]))
 	}	
 	
 	$array = implode("','",array_keys($arMap));
-	$sql = "SELECT ar_id, special_target FROM target_special_target WHERE fromDate='$fromDate' AND toDate='$toDate' AND ar_id IN ('$array')";
+	$sql = "SELECT ar_id, special_target FROM special_target WHERE fromDate='$fromDate' AND toDate='$toDate' AND ar_id IN ('$array')";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con));		 
 ?>
 
@@ -160,7 +160,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC))
 </table>
 <br><br>
 <?php 
-	$sql = "SELECT locked FROM lock_specialtarget WHERE from_date='$fromDate' AND to_date='$toDate' ";
+	$sql = "SELECT locked FROM special_target_locker WHERE from_date='$fromDate' AND to_date='$toDate' ";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con));
 	$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
 	if($row['locked'] != true && count($row) > 0)

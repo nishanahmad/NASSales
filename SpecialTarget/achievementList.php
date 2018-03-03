@@ -28,7 +28,7 @@ foreach($arList as $arObject)
 }
 
 
-$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM target_special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate'") or die(mysqli_error($con));		 
+$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate'") or die(mysqli_error($con));		 
 
 foreach($ar_detail as $ar)
 {	

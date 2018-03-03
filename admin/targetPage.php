@@ -13,7 +13,7 @@ if(isset($_SESSION["user_name"]))
 		$year = $_GET["year"];
 	else
 		$year = date("Y");
-	$result = mysqli_query($con,"SELECT * FROM lock_target WHERE year='" . $year . "'") or die(mysqli_error($con));				 
+	$result = mysqli_query($con,"SELECT * FROM target_locker WHERE year='" . $year . "'") or die(mysqli_error($con));				 
 ?>
 
 <html>

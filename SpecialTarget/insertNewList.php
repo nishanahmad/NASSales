@@ -18,12 +18,12 @@ if(isset($_SESSION["user_name"]))
 			{
 				if(is_numeric($arId))
 				{
-					$insertQuery = "INSERT INTO target_special_target (ar_id,fromDate,toDate,special_target) VALUES ('$arId','$fromDate','$toDate','$special_target')";
+					$insertQuery = "INSERT INTO special_target (ar_id,fromDate,toDate,special_target) VALUES ('$arId','$fromDate','$toDate','$special_target')";
 					$insert = mysqli_query($con, $insertQuery) or die(mysqli_error($con));		 											
 				}
 
 			}
-			$lock = mysqli_query($con, "INSERT INTO lock_specialtarget (from_date,to_date,locked) VALUES ('$fromDate','$toDate',1)") or die(mysqli_error($con));		 											
+			$lock = mysqli_query($con, "INSERT INTO special_target_locker (from_date,to_date,locked) VALUES ('$fromDate','$toDate',1)") or die(mysqli_error($con));		 											
 			header("Location:../index.php");
 		}	
 	}

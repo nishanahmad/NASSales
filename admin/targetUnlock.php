@@ -6,7 +6,7 @@ if(isset($_SESSION["user_name"]))
 
 	$year = $_GET['year'];
 	$month = $_GET['month'];
-	$result = mysqli_query($con,"UPDATE lock_target SET locked='0' WHERE month='$month' AND year = '$year'") or die(mysqli_error($con));				 
+	$result = mysqli_query($con,"UPDATE target_locker SET locked='0' WHERE month='$month' AND year = '$year'") or die(mysqli_error($con));				 
 
 	header("Location:targetPage.php?year=$year");
 }
