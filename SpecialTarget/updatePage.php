@@ -25,7 +25,7 @@ if(isset($_SESSION["user_name"]))
 	}	
 	
 	$array = implode("','",array_keys($arMap));
-	$sql = "SELECT ar_id, special_target FROM ar_calculation_special_target WHERE fromDate='$fromDate' AND toDate='$toDate' AND ar_id IN ('$array')";
+	$sql = "SELECT ar_id, special_target FROM target_special_target WHERE fromDate='$fromDate' AND toDate='$toDate' AND ar_id IN ('$array')";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con));		 
 ?>
 

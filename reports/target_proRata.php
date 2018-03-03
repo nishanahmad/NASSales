@@ -34,7 +34,7 @@ if(isset($_SESSION["user_name"]))
 		header("Location:totalSalesAR.php?month=".$_POST['month']."&year=".$_POST['year']);	
 	}	
 	
-	$targetObjects = mysqli_query($con, "SELECT * FROM ar_calculation WHERE year=$year AND month = $month AND ar_id IN ('$array')" ) or die(mysqli_error($con));	
+	$targetObjects = mysqli_query($con, "SELECT * FROM target WHERE year=$year AND month = $month AND ar_id IN ('$array')" ) or die(mysqli_error($con));	
 	foreach($targetObjects as $target)
 	{
 		$targetMap[$target['ar_id']] = $target['target'];
@@ -43,6 +43,7 @@ if(isset($_SESSION["user_name"]))
 	
 	$salesList = mysqli_query($con, "SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM sales_entry WHERE YEAR(entry_date) = $year AND MONTH(entry_date) = $month AND ar_id IN ('$array') GROUP BY ar_id" ) or die(mysqli_error($con));
 
+	$mainarray = array();
 	foreach($salesList as $arSale)
 	{  
 		$target = $targetMap[$arSale['ar_id']];
@@ -99,9 +100,9 @@ if(isset($_SESSION["user_name"]))
 <a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='50px' height='50px'/> </a> &nbsp;&nbsp;&nbsp;
 <br><br><br><br>
 
-	<select name="month" id="month" required class="textarea" onChange="refresh();">
+	<select name="month" id="month" class="textarea" onChange="refresh();">
 		<option value = "<?php echo $month;?>"><?php echo getMonth($month);?></option>			<?php	
-		$monthList = mysqli_query($con, "SELECT DISTINCT month FROM ar_calculation WHERE month <> $month ORDER BY month ASC" ) or die(mysqli_error($con));	
+		$monthList = mysqli_query($con, "SELECT DISTINCT month FROM target WHERE month <> $month ORDER BY month ASC" ) or die(mysqli_error($con));	
 		foreach($monthList as $monthObj) 
 		{
 ?>			<option value="<?php echo $monthObj['month'];?>"><?php echo getMonth($monthObj['month']);?></option>		<?php	
@@ -112,7 +113,7 @@ if(isset($_SESSION["user_name"]))
 	
 	<select name="year" id="year" required class="textarea" onChange="refresh();">
 		<option value = "<?php echo $year;?>"><?php echo $year;?></option>			<?php	
-		$yearList = mysqli_query($con, "SELECT DISTINCT year FROM ar_calculation  WHERE year <> $year ORDER BY year DESC") or die(mysqli_error($con));	
+		$yearList = mysqli_query($con, "SELECT DISTINCT year FROM target  WHERE year <> $year ORDER BY year DESC") or die(mysqli_error($con));	
 		foreach($yearList as $yearObj) 
 		{
 ?>			<option value="<?php echo $yearObj['year'];?>"><?php echo $yearObj['year'];?></option>		<?php	

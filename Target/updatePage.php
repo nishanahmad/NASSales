@@ -18,7 +18,7 @@ if(isset($_SESSION["user_name"]))
 	
 	$array = implode("','",array_keys($arMap));	
 	
-	$sql = "SELECT ar_id, target, rate, payment_perc, company_target FROM ar_calculation WHERE year='$year' AND Month='$month' AND ar_id IN ('$array')";
+	$sql = "SELECT ar_id, target, rate, payment_perc, company_target FROM target WHERE year='$year' AND Month='$month' AND ar_id IN ('$array')";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con));		 
 ?>
 

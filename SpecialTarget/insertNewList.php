@@ -18,7 +18,7 @@ if(isset($_SESSION["user_name"]))
 			{
 				if(is_numeric($arId))
 				{
-					$insertQuery = "INSERT INTO ar_calculation_special_target (ar_id,fromDate,toDate,special_target) VALUES ('$arId','$fromDate','$toDate','$special_target')";
+					$insertQuery = "INSERT INTO target_special_target (ar_id,fromDate,toDate,special_target) VALUES ('$arId','$fromDate','$toDate','$special_target')";
 					$insert = mysqli_query($con, $insertQuery) or die(mysqli_error($con));		 											
 				}
 

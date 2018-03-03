@@ -21,7 +21,7 @@ function insertNewMonthPoints($month,$year)
 	}
 	
 	$array = implode("','",array_keys($arMap));		
-	$sql = "SELECT ar_id, target, rate, payment_perc FROM ar_calculation WHERE year='$oldyear' AND Month='$oldmonth' AND ar_id IN ('$array')";
+	$sql = "SELECT ar_id, target, rate, payment_perc FROM target WHERE year='$oldyear' AND Month='$oldmonth' AND ar_id IN ('$array')";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con));				   
 	if(mysqli_num_rows($result) > 0)
 	{
@@ -33,7 +33,7 @@ function insertNewMonthPoints($month,$year)
 			$pp = $row['payment_perc'];
 		
 
-			$sql1="INSERT INTO ar_calculation (ar_id, target,rate,payment_perc, month, year)
+			$sql1="INSERT INTO target (ar_id, target,rate,payment_perc, month, year)
 			VALUES
 			('$arId', '$target',$rate, '$pp' ,'$month', '$year')";							
 			$result1 = mysqli_query($con, $sql1) or die(mysqli_error($con));				   			

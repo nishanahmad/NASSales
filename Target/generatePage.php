@@ -17,7 +17,7 @@ if(isset($_SESSION["user_name"]))
 	}
 	
 	$array = implode("','",array_keys($arMap));	
-	$sql = "SELECT ar_id, target, rate, payment_perc FROM ar_calculation WHERE year='$year' AND Month='$month' AND ar_id IN ('$array')";
+	$sql = "SELECT ar_id, target, rate, payment_perc FROM target WHERE year='$year' AND Month='$month' AND ar_id IN ('$array')";
 	$result = mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 21');		
 
 	if(mysqli_num_rows($result) > 0)
@@ -35,7 +35,7 @@ if(isset($_SESSION["user_name"]))
 		insertNewMonthPoints($month,$year);
 		$unlock = mysqli_query($con, "INSERT INTO lock_target (month,year,locked) VALUES ('$month','$year','0') ") or die(mysqli_error($con).' LINE 36');				
 		
-		$sql = "SELECT ar_id, target, rate, payment_perc FROM ar_calculation WHERE year='$year' AND Month='$month'  AND ar_id IN ('$array')";
+		$sql = "SELECT ar_id, target, rate, payment_perc FROM target WHERE year='$year' AND Month='$month'  AND ar_id IN ('$array')";
 		$result = mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 39');				
 	}	
 ?>
