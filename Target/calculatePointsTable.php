@@ -133,7 +133,7 @@ function rerender()
 <div class="circle"></div>
 <div class="circle1"></div>
 <br>
-<font style="color:white;font-weight:bold">Loading......</font>
+<font style="color:white;font-weight:bold">Calculating ......</font>
 </div>
 <div id="main" class="main">
 

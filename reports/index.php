@@ -26,7 +26,7 @@ if(isset($_SESSION["user_name"]))
    	<button  class="btn lg ghost" onclick="location.href='totalSalesAR.php'"><b>AR Total Sales</b></button>
     <br><br><br>	
 
-   	<button  class="btn lg ghost" onclick="location.href='generateDateSelectPage.php'"><b>AR Target Pro-Rata</b></button>
+   	<button  class="btn lg ghost" onclick="location.href='target_proRata.php?'"><b>AR Target Pro-Rata</b></button>
     <br><br><br>
 	
 	</div>

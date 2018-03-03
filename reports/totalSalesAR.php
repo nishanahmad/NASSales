@@ -32,6 +32,9 @@ if(isset($_SESSION["user_name"]))
 <head>
 	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../css/responstable.css">
+	<link rel="stylesheet" type="text/css" href="../css/glow_box.css">	
+	<link rel="stylesheet" href="../css/greenButton.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">			
 	
 	<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
 	<script type="text/javascript" language="javascript" src="../js/jquery-ui.min.js"></script>
@@ -52,16 +55,15 @@ if(isset($_SESSION["user_name"]))
 <a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='50px' height='50px'/> </a> &nbsp;&nbsp;&nbsp;
 <br><br><br><br>
 <form method="post" action="">
-	<label>FROM</label>
-	<input type="text" id="fromDate" name="fromDate" required value="<?php echo date('d-m-Y',strtotime($fromDate)); ?>" />
-	
-	<label>TO</label>
-	<input type="text" id="toDate" name="toDate" required value="<?php echo date('d-m-Y',strtotime($toDate)); ?>" />
-	
-	<input type="submit" name="submit" value="Update">	
+	<input type="text" id="fromDate" class="textarea" name="fromDate" required value="<?php echo date('d-m-Y',strtotime($fromDate)); ?>" />
+	&nbsp;&nbsp;to&nbsp;&nbsp;
+	<input type="text" id="toDate" class="textarea" name="toDate" required value="<?php echo date('d-m-Y',strtotime($toDate)); ?>" />
+	<br><br>
+	<input type="submit" class="btn" name="submit" value="Update">	
 </form>
-<br><br>
-<table class="responstable" style="width:65% !important;">
+<br>
+<table class="responstable" name="responstable" id="responstable" style="width:65% !important;">
+<thead>
 <tr>
 	<th>AR</th>
 	<th style="width:15%;">Phone</th>
@@ -71,8 +73,14 @@ if(isset($_SESSION["user_name"]))
 	<th style="width:5%;">F2R</th>
 	<th style="width:7%;">Total</th>
 </tr>
+</thead>
+<tbody>
 <?php
 	$salesList = mysqli_query($con, "SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r) FROM sales_entry WHERE entry_date >= '$fromDate' AND entry_date <= '$toDate' GROUP BY ar_id" ) or die(mysqli_error($con));
+	$srp = 0;
+	$srh = 0;
+	$f2r = 0;
+	$total = 0;
 	foreach($salesList as $arSale)
 	{
 ?>		<tr>
@@ -84,11 +92,26 @@ if(isset($_SESSION["user_name"]))
 			<td><?php echo $arSale['SUM(f2r)'];?></td>			
 			<td><b><?php echo $arSale['SUM(srp)'] + $arSale['SUM(srh)'] + $arSale['SUM(f2r)'];?></b></td>			
 		</tr>
-<?php		
+<?php	
+		$srp = $srp + $arSale['SUM(srp)'];
+		$srh = $srh + $arSale['SUM(srh)'];
+		$f2r = $f2r + $arSale['SUM(f2r)'];
+		$total = $total + $arSale['SUM(srp)'] + $arSale['SUM(srh)'] + $arSale['SUM(f2r)'];
 	}
 ?>	
+	<tr>
+		<td colspan="7"></td>
+	</tr>
+	<tr style="font-weight:bold;">
+		<td colspan="3" style="text-align:right">TOTAL</td>
+		<td><?php echo $srp;?></td>
+		<td><?php echo $srh;?></td>
+		<td><?php echo $f2r;?></td>
+		<td><?php echo $total;?></td>
+	</tr>
+</body>	
 </table>
-<br><br>
+<br><br><br><br><br><br>
 </div>
 </body>			
 <?php
