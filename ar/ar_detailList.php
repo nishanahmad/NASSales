@@ -5,7 +5,6 @@ session_start();
 if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
-
 	$sqlArea = "SELECT area, number FROM area order by number asc ";
 	$resultArea = mysqli_query($con, $sqlArea) or die(mysqli_error($con));			 
 ?>
@@ -79,7 +78,6 @@ if(isset($_SESSION["user_name"]))
     padding: .3em;
   }
 }
-
 h1 {
   font-family: Verdana;
   font-weight: normal;
@@ -149,7 +147,6 @@ while($rowArea = mysqli_fetch_array($resultArea,MYSQLI_ASSOC))
 		$area = $row['area'];
 		$mobile = $row['mobile'];
 		$status = $row['isActive'];
-
 	?>	
 	<tr>
 	<td style="width:30%"><label align="center"><?php echo $arname; ?></td>	
@@ -175,16 +172,7 @@ while($rowArea = mysqli_fetch_array($resultArea,MYSQLI_ASSOC))
 }																								?>
 </table>
 <br><br>
-<?php 
-//	$sql = "SELECT locked FROM target_locker WHERE year='$year' AND Month='$month' ";
-//	$result = mysqli_query($con, $sql) or die(mysqli_error($con));
-//	$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-//	if($row['locked'] != true && count($row) > 0)
-//	{
-?>		<div align="center"><input type="submit" name="submit" value="Submit" onclick=" return showLoader()"></div>		
-<?php	
-//	}		
-?>
+<div align="center"><input type="submit" name="submit" value="Submit" onclick=" return showLoader()"></div>		
 </form>
 </div>
 </body>

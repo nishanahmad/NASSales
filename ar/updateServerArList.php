@@ -27,5 +27,7 @@ if(isset($_SESSION["user_name"]))
 	$result2 = mysqli_query($con, $updatearea) or die(mysqli_error($con));				   	
 	$result3 = mysqli_query($con, $updatestatus) or die(mysqli_error($con));				   	
 	header( "Location: ar_detailList.php?message" );
-}	
+}
+else
+	header( "Location: ../index.php" );
 ?>

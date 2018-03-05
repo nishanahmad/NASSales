@@ -27,58 +27,57 @@ if(isset($_SESSION["user_name"]))
 		$todayCheck = true;
 	
 	
-	$arList = mysqli_query($con,"SELECT id, ar_name, isActive FROM ar_details") or die(mysqli_error($con));		 
+	$arList = mysqli_query($con,"SELECT id, ar_name, mobile, shop_name FROM ar_details WHERE isActive = 1") or die(mysqli_error($con));		 
 	foreach($arList as $arObject)
 	{
-		$activeMap[$arObject['id']] = $arObject['isActive'];
 		$arNameMap[$arObject['id']] = $arObject['ar_name'];
+		$arMobileMap[$arObject['id']] = $arObject['mobile'];
+		$arShopMap[$arObject['id']] = $arObject['shop_name'];
 	}
 
 
-	$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate'") or die(mysqli_error($con));		 
+	$array = implode(',',array_keys($arNameMap));	
+	$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND ar_id IN ('$array')") or die(mysqli_error($con));		 
 
 	foreach($ar_detail as $ar)
 	{	
 		$arId = $ar['ar_id'];
-		if($activeMap[$arId])
+		$mainArray[$arId] = array();
+		$mainArray[$arId]['special_target'] = $ar['special_target'];
+		$mainArray[$arId]['actual_sales'] = 0;
+		$mainArray[$arId]['percentage'] = 0;
+		
+		if(isset($_GET['removeToday']) && $_GET['removeToday'] == 'true')
 		{
-			$mainArray[$arId] = array();
-			$mainArray[$arId]['special_target'] = $ar['special_target'];
-			$mainArray[$arId]['actual_sales'] = 0;
-			$mainArray[$arId]['percentage'] = 0;
-			
-			if(isset($_GET['removeToday']) && $_GET['removeToday'] == 'true')
-			{
-				$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
-													AND entry_date <= '$toDate' AND entry_date <> CURDATE() 
-													AND ar_id = '$arId'
-													AND bill_no not like '%can%' GROUP BY ar_id")
-													or die(mysqli_error($con));												
-			}
-			else
-				$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
-													AND entry_date <= '$toDate'
-													AND ar_id = '$arId'
-													AND bill_no not like '%can%' GROUP BY ar_id")
-													or die(mysqli_error($con));								
+			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
+												AND entry_date <= '$toDate' AND entry_date <> CURDATE() 
+												AND ar_id = '$arId'
+												AND bill_no not like '%can%' GROUP BY ar_id")
+												or die(mysqli_error($con));												
+		}
+		else
+			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
+												AND entry_date <= '$toDate'
+												AND ar_id = '$arId'
+												AND bill_no not like '%can%' GROUP BY ar_id")
+												or die(mysqli_error($con));								
 
-			foreach($sales as $sale)
-			{
-				$lpp = $sale['SUM(srp)'];
-				$hdpe = $sale['SUM(srh)'];
-				$cstl = $sale['SUM(f2r)'];
-				$return_bag = $sale['SUM(return_bag)'];
-				$total = $lpp + $hdpe + $cstl - $return_bag;
-				
-				$mainArray[$arId]['actual_sales'] = $mainArray[$arId]['actual_sales'] + $total;
-				
-				if($mainArray[$arId]['special_target'] != 0)
-					$mainArray[$arId]['percentage'] = round($mainArray[$arId]['actual_sales'] * 100 / $mainArray[$arId]['special_target'],0);
-				else
-					$mainArray[$arId]['percentage'] = 0;
-				
-				
-			}
+		foreach($sales as $sale)
+		{
+			$lpp = $sale['SUM(srp)'];
+			$hdpe = $sale['SUM(srh)'];
+			$cstl = $sale['SUM(f2r)'];
+			$return_bag = $sale['SUM(return_bag)'];
+			$total = $lpp + $hdpe + $cstl - $return_bag;
+			
+			$mainArray[$arId]['actual_sales'] = $mainArray[$arId]['actual_sales'] + $total;
+			
+			if($mainArray[$arId]['special_target'] != 0)
+				$mainArray[$arId]['percentage'] = round($mainArray[$arId]['actual_sales'] * 100 / $mainArray[$arId]['special_target'],0);
+			else
+				$mainArray[$arId]['percentage'] = 0;
+			
+			
 		}
 	}
 ?>
@@ -176,10 +175,12 @@ if(isset($_SESSION["user_name"]))
 <?php				}
 ?>
 		<br><br>
-		<table id="datatables" class="stripe hover order-column row-border compact" cellspacing="0" width="40%">
+		<table id="datatables" class="stripe hover order-column row-border compact" cellspacing="0" width="60%">
 			<thead>
 				<tr align="center">
 				<th style="text-align:left;">AR</th>
+				<th>SHOP</th>
+				<th>MOBILE</th>
 				<th>Special Target</th>
 				<th>Actual Sales</th>
 				<th>Balance</th>
@@ -194,6 +195,8 @@ if(isset($_SESSION["user_name"]))
 			?>
 				<tr align="center">
 					<td style="text-align:left;"><?php echo $arNameMap[$arId];?></td>
+					<td><?php echo $arShopMap[$arId];?></td>
+					<td><?php echo $arMobileMap[$arId];?></td>
 					<td><?php echo $subarray['special_target']?></td>
 					<td><?php echo $subarray['actual_sales']?></td>
 					<td><?php echo $subarray['special_target']-$subarray['actual_sales']; ?></td>							

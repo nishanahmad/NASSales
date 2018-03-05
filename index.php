@@ -35,9 +35,6 @@ if(isset($_SESSION["user_name"]))
 <?php	
 	}
 ?>	
-	<button  class="btn lg ghost" onclick="location.href='sales/new.php'"><b>ADD NEW SALE</b></button>
-    <br><br><br>
-
 	<button  class="btn lg ghost" onclick="location.href='sales/todayList.php?ar=all'"><b>TODAY SALES</b></button>
     <br><br><br>
 
@@ -47,15 +44,15 @@ if(isset($_SESSION["user_name"]))
 	<button  class="btn lg ghost" onclick="location.href='company'"><b>COMPANY SALE</b></button>
     <br><br><br>	
 		
-   	<button  class="btn lg ghost" onclick="location.href='ar/ar_detailList.php'"><b>AR DETAILS</b></button>
+   	<button  class="btn lg ghost" onclick="location.href='ar/'"><b>AR DETAILS & POINTS</b></button>
     <br><br><br>	
    	
-   	<button  class="btn lg ghost" onclick="location.href='Target/'"><b>TARGET & POINTS</b></button>
+   	<!--button  class="btn lg ghost" onclick="location.href='Target/'"><b>TARGET & POINTS</b></button>
     <br><br><br>		
 	
 	
 	<button  class="btn lg ghost" onclick="location.href='SpecialTarget/'"><b>SPECIAL TARGET</b></button>
-    <br><br><br>		
+    <br><br><br-->		
 	
 	
 	<button  class="btn lg ghost" onclick="location.href='reports/'"><b>REPORTS</b></button>
