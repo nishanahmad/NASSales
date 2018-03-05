@@ -4,8 +4,8 @@ if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
 
-	$requestData= $_REQUEST;
-
+	$requestData= $_REQUEST;	
+	
 	$columns = array( 
 		0 =>'sales_id', 
 		1 =>'entry_date', 
@@ -22,7 +22,7 @@ if(isset($_SESSION["user_name"]))
 // getting total number records without any search
 
 	$sql = "SELECT sales_id,entry_date, ar_id,truck_no,srp,srh,f2r,bill_no,customer_name,remarks";
-	$sql.=" FROM nas_sale ORDER BY entry_date DESC";
+	$sql.=" FROM nas_sale";
 	$query=mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 26');	
 	$totalData = mysqli_num_rows($query);
 	$totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
@@ -188,7 +188,9 @@ $json_data = array(
 			"data"            => $data,   // total data array
 			"srp"			  => $srp,
 			"srh"			  => $srh,
-			"f2r"			  => $f2r
+			"f2r"			  => $f2r,
+			"sql"			  => $sql
+			//"request"		  => $request[0]
 			);
 
 echo json_encode($json_data);  // send data as json format

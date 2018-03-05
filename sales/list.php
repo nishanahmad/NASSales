@@ -52,6 +52,7 @@ if(isset($_SESSION["user_name"]))
 	$('.srh').html(json.srh);
 	$('.f2r').html(json.f2r);
 	$('.total').html(json.srp + json.srh + json.f2r);
+	$('.sql').html(json.sql);
 } );				
 				
 				
@@ -81,6 +82,7 @@ if(isset($_SESSION["user_name"]))
 <div align="center" class="gradient">
 <font size=5>
 <br>
+<!--SQL:<span class='sql'></span><br><br>-->
 SRP:<span class='srp'></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 SRH :<span class='srh'></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 F2R : <span class='f2r'></span><br><br>

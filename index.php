@@ -41,7 +41,7 @@ if(isset($_SESSION["user_name"]))
 	<button  class="btn lg ghost" onclick="location.href='sales/todayList.php?ar=all'"><b>TODAY SALES</b></button>
     <br><br><br>
 
-	<button  class="btn lg ghost" onclick="location.href='sales/list.php?ar=all'"><b>ALL SALES</b></button>
+	<button  class="btn lg ghost" onclick="location.href='sales/list.php'"><b>ALL SALES</b></button>
     <br><br><br><br>
 	
 	<button  class="btn lg ghost" onclick="location.href='company'"><b>COMPANY SALE</b></button>
