@@ -36,7 +36,7 @@ if(isset($_SESSION["user_name"]))
 	}
 
 
-	$array = implode(',',array_keys($arNameMap));	
+	$array = implode("','",array_keys($arNameMap));	
 	$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND ar_id IN ('$array')") or die(mysqli_error($con));		 
 
 	foreach($ar_detail as $ar)
