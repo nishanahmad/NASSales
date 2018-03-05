@@ -38,5 +38,5 @@ catch (Exception $e)
 	echo $mySforceConnection->getLastRequest();
 	print_r($e);
 }
-header("Location:../ar_update_salesforce.php");
+header("Location:ar_update_salesforce.php");
 ?>

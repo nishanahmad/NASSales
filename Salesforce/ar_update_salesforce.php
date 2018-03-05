@@ -11,9 +11,9 @@ if(isset($_SESSION["user_name"]))
 <head >
 <title>UpLoad To SalesForce</title>
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
-<script type="text/javascript" language="javascript" src="js/jquery.js"></script>
-<script type="text/javascript" language="javascript" src="js/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="../js/jquery-ui.min.js"></script>
 <script>
 $(function() {
 
@@ -26,11 +26,11 @@ $( "#datepicker1" ).datepicker(pickerOpts);
 </head>
  <body>
 <div class="background" align = "center">
-<img src="images/salesforce-logo.jpg">
+<img src="../images/Salesforce-Logo.jpg">
 <br><br><br>
 <b>Last Uploaded on <?php echo $last_date;?></b>
 <br><br>
-<form name="date" method="post" action="Salesforce/SalesForceUpdate.php">
+<form name="date" method="post" action="SalesForceUpdate.php">
 <input type="text" id="datepicker1" name="date" size="20" placeholder="Select Date" />
 <br><br>
 <div align="center"><input type="submit" name="submit" value="Upload To Salesforce" ></div>
@@ -45,5 +45,5 @@ $( "#datepicker1" ).datepicker(pickerOpts);
 <?php
 }
 else
-header("Location:loginPage.php");
+header("Location:../index.php");
 ?>

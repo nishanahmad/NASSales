@@ -46,14 +46,6 @@ if(isset($_SESSION["user_name"]))
 		
    	<button  class="btn lg ghost" onclick="location.href='ar/'"><b>AR DETAILS & POINTS</b></button>
     <br><br><br>	
-   	
-   	<!--button  class="btn lg ghost" onclick="location.href='Target/'"><b>TARGET & POINTS</b></button>
-    <br><br><br>		
-	
-	
-	<button  class="btn lg ghost" onclick="location.href='SpecialTarget/'"><b>SPECIAL TARGET</b></button>
-    <br><br><br-->		
-	
 	
 	<button  class="btn lg ghost" onclick="location.href='reports/'"><b>REPORTS</b></button>
     <br><br><br>

@@ -20,7 +20,7 @@ if(isset($_SESSION["user_name"]))
 </div>
 <div class="container">
   <div class="row">
-	<a href="../index.php"><img alt='Add' title='Add New' src='../images/homesilver.png' width='80px' height='80px'/></a>
+	<a href="../index.php"><img alt='Add' title='Add New' src='../images/homeSilver.png' width='80px' height='80px'/></a>
   </div>
   <hr />
   </div>
