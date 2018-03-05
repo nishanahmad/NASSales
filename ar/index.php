@@ -23,10 +23,10 @@ if(isset($_SESSION["user_name"]))
 			<button  class="btn lg ghost" onclick="location.href='ar_detailList.php'"><b>AR DETAILS</b></button>
 			<br><br><br>	
 
-			<button  class="btn lg ghost" onclick="location.href='../target/'"><b>TARGET</b></button>
+			<button  class="btn lg ghost" onclick="location.href='../Target/'"><b>TARGET</b></button>
 			<br><br><br>
 
-			<button  class="btn lg ghost" onclick="location.href='../specialTarget/'"><b>SPECIAL TARGET</b></button>
+			<button  class="btn lg ghost" onclick="location.href='../SpecialTarget/'"><b>SPECIAL TARGET</b></button>
 			<br><br><br>
 			
 			</div>
