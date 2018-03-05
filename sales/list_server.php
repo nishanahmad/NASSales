@@ -9,7 +9,7 @@ if(isset($_SESSION["user_name"]))
 	$columns = array( 
 		0 =>'sales_id', 
 		1 =>'entry_date', 
-		2 =>'ar', 
+		2 =>'ar_id', 
 		3 => 'truck_no',
 		4=> 'srp',
 		5=> 'srh',
@@ -21,14 +21,14 @@ if(isset($_SESSION["user_name"]))
 
 // getting total number records without any search
 
-	$sql = "SELECT sales_id,entry_date, ar,truck_no,srp,srh,f2r,bill_no,customer_name,remarks";
+	$sql = "SELECT sales_id,entry_date, ar_id,truck_no,srp,srh,f2r,bill_no,customer_name,remarks";
 	$sql.=" FROM nas_sale ORDER BY entry_date DESC";
 	$query=mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 26');	
 	$totalData = mysqli_num_rows($query);
 	$totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
 
 
-	$sql = "SELECT sales_id,entry_date, ar,truck_no,srp,srh,f2r,bill_no,customer_name,remarks";
+	$sql = "SELECT sales_id,entry_date, ar_id,truck_no,srp,srh,f2r,bill_no,customer_name,remarks";
 	$sql.=" FROM nas_sale where 1=1  ";
 
 
@@ -150,16 +150,23 @@ $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestD
 
 $query=mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 144 --'.$sql);	
 
+$arObjects =  mysqli_query($con,"SELECT id,ar_name FROM ar_details ORDER BY ar_name ASC ") or die(mysqli_error($con));		 
+foreach($arObjects as $ar)
+{
+	$arMap[$ar['id']] = $ar['ar_name'];
+}			
+
 $data = array();
 $srp = 0;
 $srh = 0;
 $f2r = 0;
-while( $row=mysqli_fetch_array($query) ) {  // preparing an array
+while( $row=mysqli_fetch_array($query) ) 
+{
 	$nestedData=array(); 
 
 	$nestedData[] = '<a href="edit.php?clicked_from=all_sales&sales_id='.$row["sales_id"].'">'.$row["sales_id"].'</a>';
 	$nestedData[] = date('d-m-Y',strtotime($row['entry_date']));
-	$nestedData[] = $row['ar'];
+	$nestedData[] = $arMap[$row['ar_id']];
 	$nestedData[] = $row["truck_no"];
 	$nestedData[] = $row["srp"];
 		$srp = $srp +  $row["srp"];
@@ -187,6 +194,4 @@ $json_data = array(
 echo json_encode($json_data);  // send data as json format
 
 }
-else
-	header("Location:loginPage.php");
 ?>
