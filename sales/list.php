@@ -27,7 +27,7 @@ if(isset($_SESSION["user_name"]))
 		<script type="text/javascript" language="javascript" src="../js/jsZip.js"></script>		
 		<script type="text/javascript" language="javascript">
 			$(document).ready(function() {
-				var dataTable = $('#employee-grid').DataTable( {
+				var dataTable = $('#sales-table').DataTable( {
 					dom: 'lfBrtip',
 					buttons: ['excelHtml5','colvis'],									
 					"processing": true,
@@ -39,9 +39,9 @@ if(isset($_SESSION["user_name"]))
 						url :"list_server.php", // json datasource
 						type: "post",  // method  , by default get
 						error: function(){  // error handling
-							$(".employee-grid-error").html("");
-							$("#employee-grid").append('<tbody class="employee-grid-error"><tr><th colspan="3">No data found in the server</th></tr></tbody>');
-							$("#employee-grid_processing").css("display","none");
+							$(".sales-table-error").html("");
+							$("#sales-table").append('<tbody class="sales-table-error"><tr><th colspan="3">No data found in the server</th></tr></tbody>');
+							$("#sales-table_processing").css("display","none");
 										}
 						   }
 				} );
@@ -97,12 +97,12 @@ F2R : <span class='f2r'></span><br><br>
 			<input type="text" data-column="9"  class="search-input-text textarea" placeholder="Remarks">
 
 		<br><br>
-			<table id="employee-grid" class="display cell-border no-wrap" >
+			<table id="sales-table" class="display cell-border no-wrap" >
 					<thead>
 						<tr>
 							<th>Id</th>
-							<th>Date</th>
-							<th>AR</th>
+							<th style="width:90px !important">Date</th>
+							<th style="width:200px !important">AR</th>
 							<th>Truck</th>
 							<th>SRP</th>
 							<th>SRH</th>
@@ -110,7 +110,6 @@ F2R : <span class='f2r'></span><br><br>
 							<th>BILL NO</th>							
 							<th>CSTMR NAME</th>							
 							<th>REMARKS</th>							
-							<th>DELETE</th>							
 						</tr>
 					</thead>
 			</table>

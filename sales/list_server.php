@@ -170,7 +170,6 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$nestedData[] = $row["bill_no"];
 	$nestedData[] = $row["customer_name"];
 	$nestedData[] = $row["remarks"];
-	$nestedData[] = '<a href="delete.php?clicked_from=all_sales&sales_id='.$row["sales_id"].'" >Delete</a>';
 
 	$data[] = $nestedData;
 }
