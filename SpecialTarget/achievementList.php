@@ -84,119 +84,127 @@ if(isset($_SESSION["user_name"]))
 ?>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
-<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
-<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" language="javascript" src="../js/jquery.dataTables.js"></script>
-<script type="text/javascript" language="javascript" >
-$(document).ready(function() {
+	<link rel="stylesheet" type="text/css" href="../css/loader.css">	
+	<link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+
+	<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="../js/jquery.dataTables.js"></script>
+	<script type="text/javascript" language="javascript" >
+	$(document).ready(function() {
+
+		$("#loader").hide();	
+		
+		var checkbox = getUrlParameter('removeToday');
+		if(checkbox =='true')
+			$('#removeToday').prop('checked', true);
+		else
+			$('#removeToday').prop('checked', false);	
+
+		$('#datatables').dataTable({
+			"scrollCollapse": true,
+			"paging": false,
+			"responsive": true,
+			"bJQueryUI":true,
+			"fixedHeader": true
+	});
+
+	} );
+
+	function refresh()
+	{
+		var range = document.getElementById("range").value;
+		var removeToday = $('#removeToday').is(':checked');
+		
+		var hrf = window.location.href;
+		hrf = hrf.slice(0,hrf.indexOf("?"));
+		
+		$("#main").hide();
+		$("#loader").show();
 	
-	var checkbox = getUrlParameter('removeToday');
-	if(checkbox =='true')
-		$('#removeToday').prop('checked', true);
-	else
-		$('#removeToday').prop('checked', false);	
+		window.location.href = hrf +"?"+ range + "&removeToday=" + removeToday;
+	}
 
-    $('#datatables').dataTable({
-		"scrollCollapse": true,
-		"paging": false,
-		"responsive": true,
-		"bJQueryUI":true,
-		"fixedHeader": true
-});
+	var getUrlParameter = function getUrlParameter(sParam) {
+		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
 
-} );
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
 
-function refresh()
-{
-	var range = document.getElementById("range").value;
-	var removeToday = $('#removeToday').is(':checked');
-	
-	var hrf = window.location.href;
-	hrf = hrf.slice(0,hrf.indexOf("?"));
-	
-	window.location.href = hrf +"?"+ range + "&removeToday=" + removeToday;
-}
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : sParameterName[1];
+			}
+		}
+	};
 
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-};
-
-</script>
-<title>Special Target</title>
+	</script>
+	<title>Special Target</title>
 </head>
 <body>
-			<div class="tabcontents">
+	<div id="loader" class="loader" align="center" style="background : #161616 url('../images/pattern_40.gif') top left repeat;height:100%">
+		<br><br><br><br><br><br><br><br><br><br><br><br>
+		<div class="circle"></div>
+		<div class="circle1"></div>
+		<br>
+		<font style="color:white;font-weight:bold">Calculating ......</font>
+	</div>
 		
-				<div id="view2">
-					<div align="center" style="width:100%;">
-					<a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='50px' height='50px'/> </a>
-					<h1>SPECIAL TARGET ACHIEVEMENT</h1>
-					<br><br>
-					<select name="range" id="range" onchange="refresh();">
-						<?php						
-						$queryDates = "SELECT from_date,to_date FROM special_target_date ORDER BY to_date ASC";
-						$dates = mysqli_query($con,$queryDates);
-						while ( $row=mysqli_fetch_assoc($dates)) 
-						{
-							$value = date('d-M-Y',strtotime($row['from_date'])).'&emsp;TO&emsp;'.date('d-M-Y',strtotime($row['to_date']));									
-							$urlValue = "fromDate=".$row['from_date']."&toDate=".$row['to_date']."";									?>
-						 <option <?php if($row['from_date'] == $fromDate) echo 'selected';?> value='<?php echo $urlValue;?>'><?php echo $value;?></option>   								<?php
-						}
-						?>
-					</select>
-					&emsp;&emsp;&emsp;
+		
+		<div align="center" style="width:100%;">
+		<a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='50px' height='50px'/> </a>
+		<h1>SPECIAL TARGET ACHIEVEMENT</h1>
+		<br><br>
+		<select name="range" id="range" onchange="refresh();">
+			<?php						
+			$queryDates = "SELECT from_date,to_date FROM special_target_date ORDER BY to_date ASC";
+			$dates = mysqli_query($con,$queryDates);
+			while ( $row=mysqli_fetch_assoc($dates)) 
+			{
+				$value = date('d-M-Y',strtotime($row['from_date'])).'&emsp;TO&emsp;'.date('d-M-Y',strtotime($row['to_date']));									
+				$urlValue = "fromDate=".$row['from_date']."&toDate=".$row['to_date']."";									?>
+			 <option <?php if($row['from_date'] == $fromDate) echo 'selected';?> value='<?php echo $urlValue;?>'><?php echo $value;?></option>   								<?php
+			}
+			?>
+		</select>
+		&emsp;&emsp;&emsp;
 <?php				if($todayCheck)
-					{
+		{
 ?>						<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Remove today's sales</input>				
 <?php				}
 ?>
-					<br><br>
-					<table id="datatables" class="stripe hover order-column row-border compact" cellspacing="0" width="40%">
-						<thead>
-							<tr align="center">
-							<th style="text-align:left;">AR</th>
-							<th>Special Target</th>
-							<th>Actual Sales</th>
-							<th>Balance</th>
-							<th>Achieved %</th>	
-							</tr>
-						</thead>
+		<br><br>
+		<table id="datatables" class="stripe hover order-column row-border compact" cellspacing="0" width="40%">
+			<thead>
+				<tr align="center">
+				<th style="text-align:left;">AR</th>
+				<th>Special Target</th>
+				<th>Actual Sales</th>
+				<th>Balance</th>
+				<th>Achieved %</th>	
+				</tr>
+			</thead>
 
-						<tbody>
-						<?php
-						foreach($mainArray as $arId =>$subarray)
-						{
-						?>
-							<tr align="center">
-								<td style="text-align:left;"><?php echo $arNameMap[$arId];?></td>
-								<td><?php echo $subarray['special_target']?></td>
-								<td><?php echo $subarray['actual_sales']?></td>
-								<td><?php echo $subarray['special_target']-$subarray['actual_sales']; ?></td>							
-								<td><?php echo $subarray['percentage']?></td>
-							</tr>	
-						<?php
-						}
-						?>
-						</tbody>
-					</table>
-					</div>
-				</div>
-				
-
-
-
+			<tbody>
+			<?php
+			foreach($mainArray as $arId =>$subarray)
+			{
+			?>
+				<tr align="center">
+					<td style="text-align:left;"><?php echo $arNameMap[$arId];?></td>
+					<td><?php echo $subarray['special_target']?></td>
+					<td><?php echo $subarray['actual_sales']?></td>
+					<td><?php echo $subarray['special_target']-$subarray['actual_sales']; ?></td>							
+					<td><?php echo $subarray['percentage']?></td>
+				</tr>	
+			<?php
+			}
+			?>
+			</tbody>
+		</table>
+		</div>
 </body>
 </html>
 <?php
