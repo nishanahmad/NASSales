@@ -1,5 +1,6 @@
 <?php
-require_once ('../connect.php');
+require_once ('soapclient/SforceEnterpriseClient.php');
+require '../connect.php';
 $sql="SELECT * FROM salesforce_token";
 $result = mysqli_query($con, $sql) or die(mysqli_error($con));
 while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
@@ -12,9 +13,7 @@ define("USERNAME", $username);
 define("PASSWORD", $password);
 define("SECURITY_TOKEN", $security_token);
 
-require_once ('soapclient/SforceEnterpriseClient.php');
-require '../connect.php';
-require '../library/array_push_assoc.php';
+
 
 $mySforceConnection = new SforceEnterpriseClient();
 $mySforceConnection->createConnection("soapclient/enterprise.wsdl.xml");
@@ -49,7 +48,7 @@ while($row = mysqli_fetch_array($ar_query,MYSQLI_ASSOC))
 	}
 	
 	$detailArray = array($sms_date,$lpp,$hdpe,$cstl,$sum);
-	$mainArray =  push($mainArray,$salesforce_id, $detailArray);
+	$mainArray[$salesforce_id] =   $detailArray;
 	
 }
 //var_dump($mainArray);

@@ -20,8 +20,8 @@ if(isset($_SESSION["user_name"]))
 	}	
 
 	if(isset($_GET['removeToday']))
+		$todayCheck = false;
 	
-	$todayCheck = false;
 	$today = date("Y-m-d");
 	if($today >= $fromDate && $today <= $toDate)
 		$todayCheck = true;

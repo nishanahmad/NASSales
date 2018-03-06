@@ -127,7 +127,7 @@ h1 span {
 </style>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/bootstrap.min.css" rel="stylesheet">
 <script type="text/javascript" language="javascript" src="js/jquery.js"></script>
 <title>AR List</title>
 <link rel="stylesheet" type="text/css" href="styles.css" />

@@ -19,10 +19,10 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="../bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">
-<title>Sales List</title>
-<link rel="stylesheet" type="text/css" href="../css/styles.css" />
+	<title>Sales List</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/styles.css" />
 </head>
 <body>
 <form name="frmsales" method="post" action="" >
@@ -106,10 +106,8 @@ if(isset($_SESSION["user_name"]))
 <div align="center"><input type="submit" name="submit" value="Download" ></div></td>
 
 </div>
-    <script src="https://code.jquery.com/jquery.js"></script>
-	<script src="../bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
-</body></html>
-
+</body>
+</html>
 <?php
 }
 

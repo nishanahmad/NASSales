@@ -20,8 +20,8 @@ if(isset($_SESSION["user_name"]))
 	}	
 
 	if(isset($_GET['removeToday']))
+		$todayCheck = false;
 	
-	$todayCheck = false;
 	$today = date("Y-m-d");
 	if($today >= $fromDate && $today <= $toDate)
 		$todayCheck = true;
@@ -93,7 +93,7 @@ if(isset($_SESSION["user_name"]))
 			$userGrouping[$arUserMap[$arId]][$arId] = $subarray;
 		}
 	}
-	krsort($userGrouping);
+	ksort($userGrouping);
 ?>
 <html>
 <head>
@@ -179,18 +179,17 @@ if(isset($_SESSION["user_name"]))
 			}
 			?>
 		</select>
-		&emsp;&emsp;&emsp;
-<?php				if($todayCheck)
-		{
-?>						<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Remove today's sales</input>				
-<?php				}
-?>
-		<br><br>																	<?php
+		&emsp;&emsp;&emsp;																												<?php
+		if($todayCheck)
+		{																																?>
+			<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Remove today's sales</input>				<?php
+		}																																?>
+		<br><br>																														<?php
 			foreach($userGrouping as $userId =>$subArray1)
-			{																		?>
+			{																															?>
 			<table class="responstable" style="width:65% !important;">
 				<tr style="line-height: 30px;">
-					<th colspan="7" style="text-align:center;font-size:20px;"><?php if(isset($userNameMap[$userId]))echo $userNameMap[$userId]; else echo 'NO USER SPECIFIED'?></th>
+					<th colspan="7" style="text-align:center;font-size:20px;"><?php echo $userNameMap[$userId]; ?></th>
 				</tr>	
 				<tr align="center">
 					<th style="text-align:left;width:250px;">AR</th>
@@ -200,11 +199,9 @@ if(isset($_SESSION["user_name"]))
 					<th>Actual Sale</th>
 					<th>Balance</th>
 					<th>Achieved%</th>	
-				</tr>																				
-			<?php
+				</tr>																														<?php
 				foreach($subArray1 as $arId =>$subarray2)			
-				{
-			?>
+				{																															?>
 				<tr>
 					<td><?php echo $arNameMap[$arId];?></td>
 					<td><?php echo $arShopMap[$arId];?></td>

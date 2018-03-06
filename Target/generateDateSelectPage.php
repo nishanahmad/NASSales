@@ -4,19 +4,28 @@
 session_start();
 if(isset($_SESSION["user_name"]))
 {
-	require '../connect.php';		
+	require '../connect.php';	
+	require '../functions/monthMap.php';		
 	if(count($_POST)>0)
 	{
 		$month = $_POST['month'];
 		$year = $_POST['year'];
 		header("Location:generatePage.php?month=$month&year=$year");
-	}	
+	}
+	$yearObjects = mysqli_query($con,"SELECT DISTINCT year FROM target ORDER BY year ASC");	
+	$newYear = 0;
+	foreach($yearObjects as $year)
+	{
+		$yearList[] = (int)$year['year'];
+		$newYear =  $year['year'] + 1;
+	}
+	$yearList[] = $newYear;
 ?>
 
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/bootstrap.min.css" rel="stylesheet">
 <script type="text/javascript" language="javascript" src="js/jquery.js"></script>
 <title>Select Month and Year</title>
 <link rel="stylesheet" type="text/css" href="styles.css" />
@@ -31,32 +40,18 @@ if(isset($_SESSION["user_name"]))
 <br>
 <br><br>
 <form method="post" action="">
-<select  name="year">
-    <option  value="2016">2016</option>
-    <option  value="2017">2017</option>
-    <option  value="2018">2018</option>
-    <option  value="2019">2019</option>
-    <option  value="2020">2020</option>
-    <option  value="2021">2021</option>
-    <option  value="2022">2022</option>	
-	<option  value="2023">2023</option>
-	<option  value="2024">2024</option>
-	<option  value="2025">2025</option>
+<select  name="year">																				<?php
+	foreach($yearList as $year)
+	{																				?>
+		<option  value="<?php echo $year;?>"> <?php echo $year;?> </option>			<?php
+	}																								?>
 </select>
 <br><br>
-<select  name="month">
-    <option  value="1" selected>January</option>
-    <option  value="2">Februaury</option>
-    <option  value="3">March</option>
-    <option  value="4">April</option>
-    <option  value="5">May</option>
-    <option  value="6">June</option>
-    <option  value="7">July</option>	
-	<option  value="8">August</option>
-	<option  value="9">September</option>
-	<option  value="10">October</option>
-	<option  value="11">November</option>
-	<option  value="12">December</option>	
+<select  name="month">																				<?php
+	for($i=1; $i<=12; $i++)
+	{																								?>
+		<option  value="<?php echo $i;?>"><?php echo getMonth($i);?></option>						<?php
+	}																								?>
 </select>
 <br><br>
 <input type="submit" name="submit" value="GENERATE">
