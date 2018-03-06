@@ -84,11 +84,11 @@ if(isset($_SESSION["user_name"]))
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="../css/loader.css">	
-	<link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
 	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="../css/responstable.css">	
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 
 	<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" language="javascript" src="../js/jquery.dataTables.js"></script>
 	<script type="text/javascript" language="javascript" >
 	$(document).ready(function() {
 
@@ -99,15 +99,6 @@ if(isset($_SESSION["user_name"]))
 			$('#removeToday').prop('checked', true);
 		else
 			$('#removeToday').prop('checked', false);	
-
-		$('#datatables').dataTable({
-			"scrollCollapse": true,
-			"paging": false,
-			"responsive": true,
-			"bJQueryUI":true,
-			"fixedHeader": true
-	});
-
 	} );
 
 	function refresh()
@@ -156,6 +147,12 @@ if(isset($_SESSION["user_name"]))
 		<a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='50px' height='50px'/> </a>
 		<h1>SPECIAL TARGET ACHIEVEMENT</h1>
 		<br><br>
+		<select name="grouping" id="grouping" onchange="location.href= this.value ">
+			 <option selected value="#">No Grouping</option>   								
+			 <option value="achievement_user.php?">User Wise</option>
+			 <option value="achievement_area.php?">Area Wise</option>   								
+		</select>		
+		<br><br>
 		<select name="range" id="range" onchange="refresh();">
 			<?php						
 			$queryDates = "SELECT from_date,to_date FROM special_target_date ORDER BY to_date ASC";
@@ -175,24 +172,19 @@ if(isset($_SESSION["user_name"]))
 <?php				}
 ?>
 		<br><br>
-		<table id="datatables" class="stripe hover order-column row-border compact" cellspacing="0" width="60%">
-			<thead>
-				<tr align="center">
-				<th style="text-align:left;">AR</th>
-				<th>SHOP</th>
-				<th>MOBILE</th>
-				<th>Special Target</th>
-				<th>Actual Sales</th>
+		<table class="responstable" style="width:65% !important;">
+			<tr>
+				<th style="text-align:left;width:250px;">AR</th>
+				<th style="width:220px;">SHOP</th>
+				<th style="width:120px;">MOBILE</th>
+				<th>Spcl Target</th>
+				<th>Actual Sale</th>
 				<th>Balance</th>
-				<th>Achieved %</th>	
-				</tr>
-			</thead>
-
-			<tbody>
+				<th>Achieved%</th>	
+			</tr>												
 			<?php
 			foreach($mainArray as $arId =>$subarray)
-			{
-			?>
+			{																					?>
 				<tr align="center">
 					<td style="text-align:left;"><?php echo $arNameMap[$arId];?></td>
 					<td><?php echo $arShopMap[$arId];?></td>
@@ -201,11 +193,8 @@ if(isset($_SESSION["user_name"]))
 					<td><?php echo $subarray['actual_sales']?></td>
 					<td><?php echo $subarray['special_target']-$subarray['actual_sales']; ?></td>							
 					<td><?php echo $subarray['percentage']?></td>
-				</tr>	
-			<?php
-			}
-			?>
-			</tbody>
+				</tr>																			<?php
+			}																					?>
 		</table>
 		</div>
 </body>
@@ -214,6 +203,6 @@ if(isset($_SESSION["user_name"]))
 }
 
 else
-	header("Location:loginPage.php");
+	header("Location:../index.php");
 
 ?>

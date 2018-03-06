@@ -27,7 +27,7 @@ if(isset($_SESSION["user_name"]))
 <br><br> 
 
   <div class="row">
-	<button  class="btn lg ghost" onclick="location.href='new'"><b>NEW</b></button>
+	<button  class="btn lg ghost" onclick="location.href='new.php'"><b>NEW</b></button>
     <br><br><br>
 
 	<button  class="btn lg ghost" onclick="location.href='report.php?'"><b>VARIANCE REPORT</b></button>

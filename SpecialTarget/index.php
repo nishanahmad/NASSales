@@ -27,7 +27,7 @@ if(isset($_SESSION["user_name"]))
    	<button  class="btn lg ghost" onclick="location.href='updatePage.php'"><b>VIEW / UPDATE SPECIAL TARGET</b></button>
     <br><br><br>	   	
 	
-   	<button  class="btn lg ghost" onclick="location.href='achievementList.php?'"><b>VIEW ACHIEVEMENT DETAILS</b></button>
+   	<button  class="btn lg ghost" onclick="location.href='achievement.php?'"><b>VIEW ACHIEVEMENT DETAILS</b></button>
     <br><br><br>	   		
 	
 	<button  class="btn lg ghost" onclick="location.href='special_target_date.php'"><b>INSERT SPECIAL TARGET DATE</b></button>
