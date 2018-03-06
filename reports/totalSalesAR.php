@@ -68,10 +68,10 @@ if(isset($_SESSION["user_name"]))
 	<th>AR</th>
 	<th style="width:15%;">Phone</th>
 	<th>Shop</th>
-	<th style="width:5%;">SRP</th>
-	<th style="width:5%;">SRH</th>
-	<th style="width:5%;">F2R</th>
-	<th style="width:7%;">Total</th>
+	<th style="width:7%;">SRP</th>
+	<th style="width:7%;">SRH</th>
+	<th style="width:7%;">F2R</th>
+	<th style="width:10%;">Total</th>
 </tr>
 </thead>
 <tbody>

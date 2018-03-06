@@ -5,6 +5,11 @@ if(isset($_SESSION["user_name"]))
 ?>
 <html>
 <head>
+<style type="text/css">
+a{
+  text-decoration:none;
+}
+</style>
 <title>Reports</title>
 <link rel="stylesheet" type="text/css" href="../css/index.css" />
 </head>
@@ -21,12 +26,12 @@ if(isset($_SESSION["user_name"]))
   </div>
 
   <div class="row">
-  <h1>Reports<h1>
+  <h1>Reports</h1>
   <br><br> 
-   	<button  class="btn lg ghost" onclick="location.href='totalSalesAR.php'"><b>AR Total Sales</b></button>
+   	<a href="totalSalesAR.php" class="btn lg ghost">AR Total Sales</a>
     <br><br><br>	
 
-   	<button  class="btn lg ghost" onclick="location.href='target_proRata.php?'"><b>AR Target Pro-Rata</b></button>
+   	<a href="target_proRata.php?" class="btn lg ghost">AR Target Pro-Rata</a>
     <br><br><br>
 	
 	</div>

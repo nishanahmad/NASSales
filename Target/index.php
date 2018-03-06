@@ -10,6 +10,11 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
+<style type="text/css">
+a{
+  text-decoration:none;
+}
+</style>
 <title>TARGET & POINTS</title>
 <link rel="stylesheet" type="text/css" href="../css/index.css" />
 </head>
@@ -19,25 +24,25 @@ if(isset($_SESSION["user_name"]))
 <div class="background">
 </div>
 <div class="container">
-  <div class="row">
-	<a href="../index.php"><img alt='Add' title='Add New' src='../images/homeSilver.png' width='80px' height='80px'/></a>
-  </div>
-  <hr />
-  </div>
-
-  <div class="row">
-  <h1>TARGET & POINTS<h1>
-  <br><br> 
-   	<button  class="btn lg ghost" onclick="location.href='updatePage.php?year=<?php echo $year;?>&month=<?php echo $month;?>'"><b>VIEW / UPDATE TARGET & RATE</b></button>
-    <br><br><br>	
-
-   	<button  class="btn lg ghost" onclick="location.href='generateDateSelectPage.php'"><b>GENERATE TARGET & RATE</b></button>
-    <br><br><br>
-
-    <button  class="btn lg ghost" onclick="location.href='calculatePointsTable.php?month=<?php echo $month;?>&year=<?php echo $year;?>'"><b>VIEW POINTS</b></button>
-    <br><br><br>
-	
+	<div class="row">
+		<a href="../index.php"><img alt='Add' title='Add New' src='../images/homeSilver.png' width='80px' height='80px'/></a>
 	</div>
+	<hr />
+</div>
+
+<div class="row">
+	<h1>TARGET & POINTS</h1>
+	<br><br> 
+	<a href="updatePage.php?year=<?php echo $year;?>&month=<?php echo $month;?>" class="btn lg ghost">VIEW / UPDATE TARGET & RATE</a>
+	<br><br><br>	
+
+	<a href="generateDateSelectPage.php" class="btn lg ghost">GENERATE TARGET & RATE</a>
+	<br><br><br>
+
+	<a href="calculatePointsTable.php?month=<?php echo $month;?>&year=<?php echo $year;?>" class="btn lg ghost">VIEW POINTS</a>
+	<br><br><br>
+
+</div>
 
 </div>
 </body>
@@ -45,5 +50,5 @@ if(isset($_SESSION["user_name"]))
 <?php
 }
 else
-header("Location:../index.php");
+	header("Location:../index.php");
 ?>

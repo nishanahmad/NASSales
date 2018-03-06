@@ -6,6 +6,11 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
+<style type="text/css">
+a{
+  text-decoration:none;
+}
+</style>
 <title>SPECIAL TARGET</title>
 <link rel="stylesheet" type="text/css" href="../css/index.css" />
 </head>
@@ -22,15 +27,15 @@ if(isset($_SESSION["user_name"]))
   </div>
 
   <div class="row">
-  <h1>SPECIAL TARGET<h1>
+  <h1>SPECIAL TARGET</h1>
   <br><br>
-   	<button  class="btn lg ghost" onclick="location.href='updatePage.php'"><b>VIEW / UPDATE SPECIAL TARGET</b></button>
+   	<a href="updatePage.php" class="btn lg ghost">VIEW / UPDATE SPECIAL TARGET</a>
     <br><br><br>	   	
 	
-   	<button  class="btn lg ghost" onclick="location.href='achievement.php?'"><b>VIEW ACHIEVEMENT DETAILS</b></button>
+   	<a href="achievement.php?" class="btn lg ghost">VIEW ACHIEVEMENT DETAILS</a>
     <br><br><br>	   		
 	
-	<button  class="btn lg ghost" onclick="location.href='special_target_date.php'"><b>INSERT SPECIAL TARGET DATE</b></button>
+	<a href="special_target_date.php" class="btn lg ghost">INSERT SPECIAL TARGET DATE</a>
     <br><br><br>	
 	</div>
 

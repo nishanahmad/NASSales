@@ -43,7 +43,7 @@ if(isset($_SESSION["user_name"]))
 	<div align="center" style="padding-bottom:5px;">
 	<a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='60px' height='60px'/> </a>
 	<br><br>
-	<h1>Special Target Details<h1>
+	<h1>Special Target Details</h1>
 	<select onchange="javascript:location.href = this.value;">
 		<?php
 		$queryDates = "SELECT from_date,to_date FROM special_target_date ORDER BY to_date ASC";
@@ -59,7 +59,7 @@ if(isset($_SESSION["user_name"]))
 	</div>
 	<br><br>
 	<form method="post" action="updateServer.php">
-	<table align="center" class="responstable" style="width:50px;">
+	<table align="center" class="responstable" style="width:25%;">
 	<tr><th style="width:25%">AR NAME</th><th style="width:25%;text-align:center;">SPECIAL TARGET</th></tr>					<?php
 	while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
 	{

@@ -7,6 +7,11 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
+<style type="text/css">
+a{
+  text-decoration:none;
+}
+</style>
 <title>COMPANY SALE</title>
 <link rel="stylesheet" type="text/css" href="../css/index.css" />
 </head>
@@ -27,10 +32,10 @@ if(isset($_SESSION["user_name"]))
 <br><br> 
 
   <div class="row">
-	<button  class="btn lg ghost" onclick="location.href='new.php'"><b>NEW</b></button>
+	<a href="new.php" class="btn lg ghost">NEW</a>
     <br><br><br>
 
-	<button  class="btn lg ghost" onclick="location.href='report.php?'"><b>VARIANCE REPORT</b></button>
+	<a href="report.php?" class="btn lg ghost">VARIANCE REPORT</a>
     <br><br><br>
 	
 	</div>

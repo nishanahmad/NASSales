@@ -5,6 +5,8 @@ if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
 
+	$urlId = $_GET['ar'];
+	
 	$arObjects = mysqli_query($con,"SELECT id,ar_name FROM ar_details ORDER BY ar_name ASC") or die(mysqli_error($con));	
 	foreach($arObjects as $ar)
 	{
@@ -19,7 +21,7 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
-	<title>Sales List</title>
+	<title>Today Sales List</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="../css/styles.css" />
@@ -34,16 +36,12 @@ if(isset($_SESSION["user_name"]))
 <br>
 <div align="center">
 <select name="ar" id="ar" onchange="document.location.href = 'todayList.php?ar=' + this.value" class="txtField">
-    <option value = "">--SELECT--</option>
-	<option value = "all">ALL</option>
-    <?php
+	<option value = "all" <?php if($urlId == 'all') echo 'selected';?> >ALL</option>													    	<?php
 	foreach($arMap as $arId => $arName)
-	{
-		echo '<option value="'.$arId.'">'.$arName.'</option>'; 
-	}
-		
-    ?>
-      </select>
+	{																																			?>
+		<option value="<?php echo $arId;?>" <?php if($urlId == $arId) echo 'selected';?>><?php echo $arName;?></option> 						<?php
+	}																																			?>
+</select>
 	  
 <h3> Date :  <?php echo date("d-m-Y") ?></h3>	  
 </div>	  
@@ -89,22 +87,14 @@ if(isset($_SESSION["user_name"]))
 </tr>
 <?php
 	}
-	$total = $total + $f2r + $srp + $srh;
-	echo "<div align ='center' style ='font:20px bold;color:#000000'> SRP = $srp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp F2R = $f2r &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp SRH = $srh </div>";
-	echo "<br>";
-	echo "<div align ='center' style ='font:20px bold;color:#000000'> TOTAL = $total </div>";
-	
-	
-	
-
-	
-	?>
+		$total = $total + $f2r + $srp + $srh;
+		echo "<div align ='center' style ='font:20px bold;color:#000000'> SRP = $srp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp F2R = $f2r &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp SRH = $srh </div>";
+		echo "<br>";
+		echo "<div align ='center' style ='font:20px bold;color:#000000'> TOTAL = $total </div>";
+?>
 </table>
 </form>
-<br><br><br>
-<form name="csv" method="post" action="../today_sales_csv.php" >
-<div align="center"><input type="submit" name="submit" value="Download" ></div></td>
-
+<br><br>
 </div>
 </body>
 </html>

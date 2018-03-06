@@ -190,7 +190,6 @@ $json_data = array(
 			"srh"			  => $srh,
 			"f2r"			  => $f2r,
 			"sql"			  => $sql
-			//"request"		  => $request[0]
 			);
 
 echo json_encode($json_data);  // send data as json format
