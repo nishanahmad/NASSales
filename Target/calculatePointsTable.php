@@ -39,8 +39,7 @@ $(window).on('load', function() {
 		});
 	});		
 } );
-</script>
-<script type="text/javascript">
+
 function rerender()
 {
 	var year = document.getElementById("jsYear").options[document.getElementById("jsYear").selectedIndex].value;
