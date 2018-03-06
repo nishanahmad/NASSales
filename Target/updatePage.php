@@ -5,7 +5,7 @@ session_start();
 if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
-	//require 'insertNewMonthPoints.php'; 
+	require '../functions/monthMap.php';			
 	
 	$year = $_GET['year'];
 	$month = $_GET['month'];
@@ -19,7 +19,14 @@ if(isset($_SESSION["user_name"]))
 	$array = implode("','",array_keys($arMap));	
 	
 	$sql = "SELECT ar_id, target, rate, payment_perc, company_target FROM target WHERE year='$year' AND Month='$month' AND ar_id IN ('$array')";
-	$result = mysqli_query($con, $sql) or die(mysqli_error($con));		 
+	$result = mysqli_query($con, $sql) or die(mysqli_error($con));		
+
+	$yearObjects = mysqli_query($con,"SELECT DISTINCT year FROM target ORDER BY year DESC");	
+	foreach($yearObjects as $yearObj)
+	{
+		$yearList[] = (int)$yearObj['year'];
+		$newYear =  $yearObj['year'] + 1;
+	}
 ?>
 
 <html>
@@ -38,10 +45,10 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 </script>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="../../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/responstable.css" rel="stylesheet">
 <script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
-<title>AR List</title>
+<title>Target</title>
 </head>
 <body>
 	<div style="width:100%;">
@@ -50,37 +57,29 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 	<br><br>
 	<font size="5px"><b><?php echo $year;?></b></font>
 	<br>
-	<select id="jsYear" name="jsYear" onchange="return rerender();">
-		<option <?php if($year==2016) echo 'Selected';?> value="2016">2016</option>
-		<option <?php if($year==2017) echo 'Selected';?> value="2017">2017</option>
-		<option <?php if($year==2018) echo 'Selected';?> value="2018">2018</option>
-		<option <?php if($year==2019) echo 'Selected';?> value="2019">2019</option>
-		<option <?php if($year==2020) echo 'Selected';?> value="2020">2020</option>	
+	<select id="jsYear" name="jsYear" onchange="return rerender();">								<?php
+	foreach($yearList as $year)
+	{																								?>
+		<option  value="<?php echo $year;?>"> <?php echo $year;?> </option>							<?php
+	}																								?>
 	</select>
-	<select id="jsMonth" name="jsMonth" onchange="return rerender();">
-		<option <?php if($month==1) echo 'Selected';?> value="1">January</option>
-		<option <?php if($month==2) echo 'Selected';?> value="2">Februaury</option>
-		<option <?php if($month==3) echo 'Selected';?> value="3">March</option>
-		<option <?php if($month==4) echo 'Selected';?> value="4">April</option>
-		<option <?php if($month==5) echo 'Selected';?> value="5">May</option>
-		<option <?php if($month==6) echo 'Selected';?> value="6">June</option>
-		<option <?php if($month==7) echo 'Selected';?> value="7">July</option>	
-		<option <?php if($month==8) echo 'Selected';?> value="8">August</option>
-		<option <?php if($month==9) echo 'Selected';?> value="9">September</option>
-		<option <?php if($month==10) echo 'Selected';?> value="10">October</option>
-		<option <?php if($month==11) echo 'Selected';?> value="11">November</option>
-		<option <?php if($month==12) echo 'Selected';?> value="12">December</option>	
+	
+	<select id="jsMonth" name="jsMonth" onchange="return rerender();">								<?php
+	for($i=1; $i<=12; $i++)
+	{																								?>
+		<option  value="<?php echo $i;?>"><?php echo getMonth($i);?></option>						<?php
+	}																								?>
 	</select>
 	</div>
 	<br><br>
 	<form name="arBulkUpdate" method="post" action="updateServer.php">
 	<table align="center" class="responstable">
 		<tr>
-			<th style="width:20%">AR NAME</th>
-			<th style="width:20%;text-align:center;">TARGET</th>
-			<th style="width:20%;text-align:center;">RATE</th>
-			<th style="width:20%;text-align:center;">PAYMENT PERCENTAGE</th> 
-			<th style="width:20%;text-align:center;">COMPANY TARGET</th> 
+			<th style="width:30%">AR NAME</th>
+			<th style="width:15%;text-align:center;">TARGET</th>
+			<th style="width:15%;text-align:center;">RATE</th>
+			<th style="width:15%;text-align:center;">PAYMENT %</th> 
+			<th style="width:15%;text-align:center;">COMPANY TARGET</th> 
 		</tr>					<?php
 	while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
 	{

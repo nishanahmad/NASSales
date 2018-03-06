@@ -34,7 +34,7 @@ if(isset($_SESSION["user_name"]))
 					"serverSide": true,
 					"responsive": true,
 					"bJQueryUI":true,
-					"iDisplayLength": 2000,					
+					"iDisplayLength": 2000,		
 					"ajax":{
 						url :"list_server.php", // json datasource
 						type: "post",  // method  , by default get
@@ -75,14 +75,13 @@ if(isset($_SESSION["user_name"]))
 	<body>
 		<div align="center">
 					<a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='60px' height='60px'/> </a> &nbsp;&nbsp;&nbsp;
-					<a href="new.php" class="link"><img alt='Add' title='Add New' src='../images/addnew.png' width='60px' height='60px'/></a>
-<!--		<h1>All Sales</h1>    -->
+					<a href="new.php" class="link"><img alt='Add' title='Add New' src='../images/addnew.png' width='60px' height='60px'/></a
 		
 		</div>
 <div align="center" class="gradient">
 <font size=5>
 <br>
-<!--SQL:<span class='sql'></span><br><br>-->
+<!--SQL:<span class='sql'></span><br><br-->
 SRP:<span class='srp'></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 SRH :<span class='srh'></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 F2R : <span class='f2r'></span><br><br>

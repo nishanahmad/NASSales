@@ -5,7 +5,7 @@ if(isset($_SESSION["user_name"]))
 	require '../connect.php';
 
 	$requestData= $_REQUEST;	
-	
+		
 	$columns = array( 
 		0 =>'sales_id', 
 		1 =>'entry_date', 
@@ -147,8 +147,12 @@ $query=mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 139');
 $totalFiltered = mysqli_num_rows($query); // when there is a search parameter then we have to modify total number filtered rows as per search result.
 	
 $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']." LIMIT ".$requestData['start']." ,".$requestData['length']."   ";  // adding length
+$query=mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 144 --'.$sql);			
 
-$query=mysqli_query($con, $sql) or die(mysqli_error($con).' LINE 144 --'.$sql);	
+$fp = fopen('results.json', 'w');
+fwrite($fp, json_encode($requestData['order']));
+fclose($fp);
+
 
 $arObjects =  mysqli_query($con,"SELECT id,ar_name FROM ar_details ORDER BY ar_name ASC ") or die(mysqli_error($con));		 
 foreach($arObjects as $ar)
