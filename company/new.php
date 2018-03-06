@@ -3,22 +3,15 @@ session_start();
 if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
-	$queryArs = "SELECT sap_code,ar_name FROM ar_details WHERE sap_code IS NOT NULL ORDER BY ar_name ASC";
-    $arObjects = mysqli_query($con,$queryArs);	
+    
+	$arObjects = mysqli_query($con,"SELECT id,sap_code,ar_name,shop_name FROM ar_details WHERE sap_code IS NOT NULL AND shop_name IS NOT NULL ORDER BY shop_name ASC");	
 	
-// Populate maps for SAP CODE and SHOP NAME
-	$query = mysqli_query($con,"SELECT ar_name,sap_code,shop_name FROM ar_details");
-	while($row= mysqli_fetch_array($query,MYSQLI_ASSOC))
+	// Populate maps for SAP CODE and AR NAME
+	foreach($arObjects as $ar)
 	{
-		$ar = $row['ar_name'];
-		$sapCode = strip_tags($row['sap_code']);
-		$shopName = strip_tags($row['shop_name']);
-
-		if(!empty($sapCode))
-		{
-			$arNameMap[$sapCode] = $ar;
-			$shopNameMap[$sapCode] = $shopName;			
-		}
+		$arNameMap[$ar['id']] = $ar['ar_name'];
+		$shopNameMap[$ar['id']] = $ar['shop_name'];			
+		$sapCodeMap[$ar['id']] = $ar['sap_code'];			
 	}
 	$arNameArray = json_encode($arNameMap);
 	$arNameArray = str_replace('\n',' ',$arNameArray);
@@ -27,6 +20,10 @@ if(isset($_SESSION["user_name"]))
 	$shopNameArray = json_encode($shopNameMap);
 	$shopNameArray = str_replace('\n',' ',$shopNameArray);
 	$shopNameArray = str_replace('\r',' ',$shopNameArray);	
+	
+	$sapCodeArray = json_encode($sapCodeMap);
+	$sapCodeArray = str_replace('\n',' ',$sapCodeArray);
+	$sapCodeArray = str_replace('\r',' ',$sapCodeArray);		
 ?>
 
 <html>
@@ -41,16 +38,18 @@ var shopNameList = '<?php echo $shopNameArray;?>';
 var shopName_array = JSON.parse(shopNameList);
 var shopNameArray = shopName_array;									
 
+var sapCodeList = '<?php echo $sapCodeArray;?>';
+var sapCode_array = JSON.parse(sapCodeList);
+var sapCodeArray = sapCode_array;									
+
 function arRefresh()
 {
-	var sapCode = $('#ar').val();
-	console.log(sapCode);
-	var arName = arNameArray[sapCode];
-	var shopName = shopNameArray[sapCode];
+	var arId = $('#ar').val();
+	console.log(arId);
+	var arName = arNameArray[arId];
+	var sapCode = sapCodeArray[arId];
 	$("#arName").text(arName);
-	$('#shopName').text(shopName);
-	console.log(arName);
-	console.log(shopName);
+	$('#sapCode').text(sapCode);
 }								
 </script>
 <script>
@@ -108,9 +107,9 @@ $( "#datepicker" ).datepicker(pickerOpts);
 <td><select name="ar" id="ar" required class="txtField" onChange="arRefresh();">
     <option value = "">---Select---</option>
     <?php   
-    while ( $ar=mysqli_fetch_assoc($arObjects)) 
+    foreach($shopNameMap as $arId => $shopName)
 	{
-?>		<option value="<?php echo $ar['sap_code'];?>"><?php echo $ar['sap_code'];?></option>			<?php
+?>		<option value="<?php echo $arId;?>"><?php echo $shopName;?></option>			<?php
 	}
 ?>
       </select>
@@ -145,7 +144,7 @@ $( "#datepicker" ).datepicker(pickerOpts);
 	<td id="arName"/>
 </tr>
 <tr>
-	<td id="shopName"/>
+	<td id="sapCode"/>
 </tr>	
 </table>
 
@@ -156,5 +155,5 @@ $( "#datepicker" ).datepicker(pickerOpts);
 <?php
 }
 else
-header("Location:loginPage.php");
+	header("Location:../index.php");
 ?>

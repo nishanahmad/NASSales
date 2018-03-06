@@ -6,13 +6,9 @@ require '../connect.php';
 session_start();
 if(isset($_SESSION["user_name"]))
 {
-	var_dump($_POST);
 	$date = $_POST['date'];
 	$sqlDate = date("Y-m-d", strtotime($date));
-	$arCode = $_POST['ar'];
-	$arObject = $result = mysqli_query($con, "SELECT ar_name FROM ar_details WHERE sap_code = '$arCode'") or die(mysqli_error($con));
-	foreach($arObject as $ar)
-		$arName = $ar['ar_name'];
+	$arId = $_POST['ar'];
 	
 	if($_POST['srp'] != '')
 		$srp = $_POST['srp'];
@@ -43,9 +39,9 @@ if(isset($_SESSION["user_name"]))
 	
 	else
 	{	
-		$sql="INSERT INTO company_sale (date, ar, srp, srh, f2r, remarks,entered_by,entered_on)
+		$sql="INSERT INTO company_sale (date, ar_id, srp, srh, f2r, remarks,entered_by,entered_on)
 			 VALUES
-			 ('$sqlDate', '$arName', '$srp', '$srh', '$f2r', '$remarks', '$entered_by', '$entered_on')";
+			 ('$sqlDate', '$arId', '$srp', '$srh', '$f2r', '$remarks', '$entered_by', '$entered_on')";
 
 		$result = mysqli_query($con, $sql) or die(mysqli_error($con));				 
 
@@ -57,6 +53,6 @@ if(isset($_SESSION["user_name"]))
 }
 else
 {
-	echo "ERROR : YOU ARE NOT LOGGED IN";
+	header( "Location: ../index.php" );
 }	
 ?> 
