@@ -9,9 +9,15 @@
 .responstable tr {
   border: 1px solid #D9E4E6;
 }
+
+.responstable tr:hover {
+  background-color: #BDF8FF !important;
+}
+
 .responstable tr:nth-child(odd) {
   background-color: #EAF3F3;
 }
+
 .responstable th {
   display: none;
   border: 1px solid #FFF;
