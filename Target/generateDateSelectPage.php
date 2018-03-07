@@ -60,10 +60,9 @@ if(isset($_SESSION["user_name"]))
 <br><br>
 <br><br>  
 </body>
-</html>
-<?php
+</html>																								<?php
+
 }
 else
-	header("../Location:loginPage.php");
+	header("Location:../index.php");
 
-?>

@@ -41,9 +41,8 @@ a{
 
 </div>
 </body>
-</html>
-<?php
+</html>																				<?php
 }
 else
-header("../Location:loginPage.php");
-?>
+	header("Location:../index.php");
+

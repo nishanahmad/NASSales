@@ -242,10 +242,8 @@ $row= mysqli_fetch_array($result,MYSQLI_ASSOC);
 </div>
 </form>
 </body>
-</html>
+</html>																								<?php
 
-<?php
 }
 else
-header("../Location:loginPage.php");
-?>
+	header("Location:../index.php");

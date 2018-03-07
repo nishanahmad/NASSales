@@ -116,11 +116,7 @@ F2R : <span class='f2r'></span><br><br>
 			</table>
 		</div>
 	</body>
-</html>
-<?php
+</html>																				<?php
 }
 else
-	header("../Location:loginPage.php");
-
-?>
-	
+	header("Location:../index.php");

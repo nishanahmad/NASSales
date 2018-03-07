@@ -10,82 +10,8 @@ if(isset($_SESSION["user_name"]))
 ?>
 
 <html>
+<head>
 <style>
-.responstable {
-  width: 60%;
-  overflow: hidden;
-  background: #FFF;
-  color: #024457;
-  border-radius: 10px;
-  border: 1px solid #167F92;
-}
-.responstable tr {
-  border: 1px solid #D9E4E6;
-}
-.responstable tr:nth-child(odd) {
-  background-color: #EAF3F3;
-}
-.responstable th {
-  display: none;
-  border: 1px solid #FFF;
-  background-color: #167F92;
-  color: #FFF;
-  padding: 1em;
-}
-.responstable th:first-child {
-  display: table-cell;
-  text-align: center;
-}
-.responstable th:nth-child(2) {
-  display: table-cell;
-}
-.responstable th:nth-child(2) span {
-  display: none;
-}
-.responstable th:nth-child(2):after {
-  content: attr(data-th);
-}
-@media (min-width: 480px) {
-  .responstable th:nth-child(2) span {
-    display: block;
-  }
-  .responstable th:nth-child(2):after {
-    display: none;
-  }
-}
-.responstable td { 
-  display: block;
-  word-wrap: break-word;
-  max-width: 3em;
-}
-.responstable td:first-child {
-  display: table-cell;
-  text-align: left;
-  border-right: 1px solid #D9E4E6;
-}
-@media (min-width: 480px) {
-  .responstable td {
-    border: 1px solid #D9E4E6;
-  }
-}
-.responstable th, .responstable td {
-  text-align: center;
-  margin: .5em 1em;
-}
-@media (min-width: 480px) {
-  .responstable th, .responstable td {
-    display: table-cell;
-    padding: .3em;
-  }
-}
-h1 {
-  font-family: Verdana;
-  font-weight: normal;
-  color: #024457;
-}
-h1 span {
-  color: #167F92;
-}
 .toast {
     width:25%;
     height:auto;
@@ -105,9 +31,9 @@ h1 span {
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
 }
 </style>
-<head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../css/loader.css">
+<link rel="stylesheet" type="text/css" href="../css/responstable.css">
 <script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
 <title>AR List</title>
 <script type="text/javascript" language="javascript" >
@@ -132,7 +58,7 @@ if(isset($_GET['message']))
 }	
 ?>
 <form name="arBulkUpdate" method="post" action="updateServerArList.php">
-<table align="center" class="responstable">
+<table align="center" class="responstable" style="width:60%;">
 <?php
 while($rowArea = mysqli_fetch_array($resultArea,MYSQLI_ASSOC)) 
 {	
@@ -176,9 +102,8 @@ while($rowArea = mysqli_fetch_array($resultArea,MYSQLI_ASSOC))
 </form>
 </div>
 </body>
-</html>
-<?php
+</html>																														<?php
+
 }
 else
-	header("Location:loginPage.php");
-?>
+	header("Location:../index.php");

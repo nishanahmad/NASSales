@@ -102,6 +102,5 @@ if(isset($_SESSION["user_name"]))
 }
 
 else
-	header("../Location:loginPage.php");
+	header("Location:../index.php");
 
-?>

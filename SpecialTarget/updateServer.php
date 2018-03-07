@@ -1,5 +1,3 @@
-<html>
-<body>
 <?php
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
@@ -31,8 +29,5 @@ if(isset($_SESSION["user_name"]))
 }
 else
 {
-	header( "Location: ../loginPage.php" );
+	header( "Location: ../index.php" );
 }	
-?> 
-</body>
-</html>

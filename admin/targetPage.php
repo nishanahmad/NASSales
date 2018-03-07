@@ -75,9 +75,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC))
 </div>
 </div>
 </body>
-</html>
-<?php
+</html>																		<?php
 }
 else
-header("../Location:loginPage.php");
-?>
+	header("Location:../index.php");

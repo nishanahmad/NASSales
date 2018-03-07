@@ -116,10 +116,7 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 	<br><br> 
 	</div> 
 </body>
-</html>
-<?php
+</html>																								<?php
 }
 else
-	header("Location:loginPage.php");
-
-?>
+	header("Location:../index.php");
