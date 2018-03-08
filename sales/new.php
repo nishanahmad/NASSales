@@ -86,15 +86,13 @@ if(isset($_SESSION["user_name"]))
 			<tr>
 				<td><label>AR</label></td>
 				<td><select name="ar" id="ar" required class="txtField" onChange="arRefresh();">
-					<option value = "">---Select---</option>
-					<?php
-					foreach($arObjects as $ar) 
-					{
-				?>		<option value="<?php echo $ar['id'];?>"><?php echo $ar['ar_name'];?></option>
-				<?php	
-					}
-				?>
-					  </select>
+						<option value = "">---Select---</option>
+																													<?php
+						foreach($arObjects as $ar) 
+						{																							?>
+							<option value="<?php echo $ar['id'];?>"><?php echo $ar['ar_name'];?></option>			<?php	
+						}																							?>
+					</select>
 				</td>
 
 				<td><label>Bill No</label></td>
@@ -151,10 +149,9 @@ if(isset($_SESSION["user_name"]))
 
 	<br>
 </body>
-</html>
+</html>																		<?php
 
-<?php
 }
 else
-	header("../Location:index.php");
-?>
+	header("Location:../index.php");
+

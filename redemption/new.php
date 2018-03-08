@@ -21,9 +21,11 @@ if(isset($_SESSION["user_name"]))
 
 <!DOCTYPE html>
 <head>
+	<title>Redeem Points</title>
 	<link href='../css/bootstrap.min.css' rel='stylesheet' type='text/css'>
 	<link href='../css/pointsForm.css' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">  
+	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css"> 
+	<link rel="stylesheet" type="text/css" href="../css/toast.css">	
 
 	<script src='../js/jquery.js' type='text/javascript'></script>
 	<script src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/js/bootstrap.min.js' type='text/javascript'></script>
@@ -38,7 +40,7 @@ if(isset($_SESSION["user_name"]))
 	{
 		var arId = $('#ar').val();
 		var shopName = shopNameArray[arId];
-		$('#shopName').val(shopName);
+		$('#shop').val(shopName);
 	}									
 	
 	
@@ -46,16 +48,31 @@ if(isset($_SESSION["user_name"]))
 		var pickerOpts = { dateFormat:"dd-mm-yy"}; 
 		$( "#date" ).datepicker(pickerOpts);
 	});		  
+	
+
+	$(document).ready(function() {
+		$('.toast').fadeIn(500).delay(2000).fadeOut(1000); 
+	});
+
 	</script>
 </head>
 <body>
-  <div class='container'>
-    <div class='panel panel-primary dialog-panel'>
+  <br><br>
+<div align="center" style="padding-bottom:5px;">
+	<a href="../index.php" class="link"><img alt='home' title='home' src='../images/home.png' width='50px' height='50px'/> </a> &nbsp;&nbsp;&nbsp;
+</div>  
+  <br><br>
+  <div class='container' style="width:60%;align:center;">																																								<?php
+	if(isset($_GET['success']))
+	{																																													?>	
+		<div class='toast' style="display:none;">SUCCESS!!!</div><br>																											<?php
+	}																																													?>	      
+	<div class='panel panel-primary dialog-panel'>
       <div class='panel-heading'>
         <h5>New Point Redemption</h5>
       </div>
       <div class='panel-body'>
-        <form class='form-horizontal' role='form'>
+        <form class='form-horizontal' role='form' action="insert.php" method="post">
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='date'>Date</label>
             <div class='col-md-8'>
@@ -72,9 +89,11 @@ if(isset($_SESSION["user_name"]))
               <div class='col-md-4'>
                 <div class='form-group internal'>
                   <select class='form-control' id='ar' name="ar" required onchange="arRefresh();">
-                    <option>AR1gsfrabsfkrdsgkdzkgbkdhdjfhbjedbhfkjdbsfksjb</option>
-                    <option>AR2</option>
-                    <option>AR3</option>
+					<option value = "">---Select---</option>																															<?php
+					foreach($arObjects as $ar) 
+					{																																									?>
+						<option value="<?php echo $ar['id'];?>"><?php echo $ar['ar_name'];?></option>																					<?php	
+					}																																									?>
                   </select>
                 </div>
               </div>
@@ -90,7 +109,7 @@ if(isset($_SESSION["user_name"]))
             <div class='col-md-8'>
               <div class='col-md-3'>
                 <div class='form-group internal input-group'>
-                  <input class='form-control' id='points' name="points">
+                  <input class='form-control' id='points' required name="points" pattern="[0-9]+" title="Input a valid number">
                 </div>
               </div>
             </div>
@@ -101,6 +120,7 @@ if(isset($_SESSION["user_name"]))
               <textarea class='form-control' id='remarks' name="remarks" placeholder='Remarks' rows='2'></textarea>
             </div>
           </div>
+		  <br><br>
           <div class='form-group'>
             <div class='col-md-offset-4 col-md-3'>
               <button class='btn-lg btn-primary' type='submit'>Redeem Points</button>
@@ -111,7 +131,7 @@ if(isset($_SESSION["user_name"]))
     </div>
   </div>
 </body>
-</html>																		<?php
+</html>																																													<?php
 
 }
 else

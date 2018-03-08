@@ -126,6 +126,7 @@ if(isset($_SESSION["user_name"]))
 <thead>
 <tr>
 	<th>AR</th>
+	<th style="width:10%;">SAP</th>
 	<th style="width:15%;">Phone</th>
 	<th>Shop</th>
 	<th style="width:5%;">Target</th>
@@ -141,6 +142,7 @@ if(isset($_SESSION["user_name"]))
 	{
 ?>		<tr>
 			<td><?php echo $arNameMap[$ar['id']];?></td>
+			<td><?php echo $arCodeMap[$ar['id']];?></td>			
 			<td><?php echo $arPhoneMap[$ar['id']];?></td>
 			<td><?php echo $arShopMap[$ar['id']];?></td>
 			<td><?php echo $mainarray[$ar['id']][0];?></td>

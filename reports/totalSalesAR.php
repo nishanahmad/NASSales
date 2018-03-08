@@ -30,6 +30,7 @@ if(isset($_SESSION["user_name"]))
 ?>
 <html>
 <head>
+	<title>AR Sale Date Wise</title>
 	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../css/responstable.css">
 	<link rel="stylesheet" type="text/css" href="../css/glow_box.css">	

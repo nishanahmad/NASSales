@@ -168,7 +168,7 @@ if(isset($_SESSION["user_name"]))
 		&emsp;&emsp;&emsp;
 <?php				if($todayCheck)
 		{
-?>						<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Remove today's sales</input>				
+?>						<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				
 <?php				}
 ?>
 		<br><br>

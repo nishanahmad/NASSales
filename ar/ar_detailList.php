@@ -11,29 +11,10 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
-<style>
-.toast {
-    width:25%;
-    height:auto;
-    left:45%;
-	margin: 0 auto;
-	bottom:10px;
-    background-color: #328e30;
-    color: #F0F0F0;
-    font-family: "Times New Roman", Times, serif;
-	padding:40px;
-    font-size: 20px;
-    padding:10px;
-    text-align:center;
-    border-radius: 2px;
-    -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
-    -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
-    box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
-}
-</style>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="../css/loader.css">
 <link rel="stylesheet" type="text/css" href="../css/responstable.css">
+<link rel="stylesheet" type="text/css" href="../css/toast.css">
 <script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
 <title>AR List</title>
 <script type="text/javascript" language="javascript" >
