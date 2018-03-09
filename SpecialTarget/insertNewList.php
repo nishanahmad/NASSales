@@ -45,7 +45,7 @@ if(isset($_SESSION["user_name"]))
 	</div>
 	<br><br>
 	<form method="post" action="">
-	<table align="center" class="responstable" style="width:50px;">
+	<table align="center" class="responstable" style="width:30%;">
 		<tr><th style="width:25%">AR NAME</th><th style="width:25%;text-align:center;">SPECIAL TARGET</th></tr>					<?php
 		foreach($arObjects as $ar) 
 		{									?>				

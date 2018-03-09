@@ -122,7 +122,7 @@ if(isset($_SESSION["user_name"]))
 
 <br><br><br>
 
-<table class="responstable" name="responstable" id="responstable" style="width:65% !important;">
+<table class="responstable" name="responstable" id="responstable" style="width:70% !important;">
 <thead>
 <tr>
 	<th>AR</th>
