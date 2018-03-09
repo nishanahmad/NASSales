@@ -196,6 +196,7 @@ if(isset($_SESSION["user_name"]))
 				</tr>																			<?php
 			}																					?>
 		</table>
+		<br><br><br><br>
 		</div>
 </body>
 </html>

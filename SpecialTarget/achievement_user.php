@@ -212,7 +212,7 @@ if(isset($_SESSION["user_name"]))
 					<td><?php echo $subarray2['percentage']?></td>
 				</tr>																<?php
 				}																	?>
-			</table><br><br>														<?php
+			</table><br><br><br><br>														<?php
 			}																		?>
 		
 		</div>

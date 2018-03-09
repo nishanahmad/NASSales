@@ -10,10 +10,12 @@ if(isset($_SESSION["user_name"]))
 	$year = $_GET['year'];
 	$month = $_GET['month'];
 
-	$arObjects = mysqli_query($con, "SELECT id,ar_name FROM ar_details WHERE isActive = 1 ORDER BY ar_name ASC") or die(mysqli_error($con));
+	$arObjects = mysqli_query($con, "SELECT * FROM ar_details WHERE isActive = 1 ORDER BY ar_name ASC") or die(mysqli_error($con));
 	foreach($arObjects as $ar)
 	{
 		$arMap[$ar['id']] = $ar['ar_name'];
+		$shopMap[$ar['id']] = $ar['shop_name'];
+		$codeMap[$ar['id']] = $ar['sap_code'];
 	}	
 	
 	$array = implode("','",array_keys($arMap));	
@@ -57,29 +59,31 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 	<br><br>
 	<font size="5px"><b><?php echo $year;?></b></font>
 	<br>
-	<select id="jsYear" name="jsYear" onchange="return rerender();">								<?php
+	<select id="jsYear" name="jsYear" onchange="return rerender();">																				<?php
 	foreach($yearList as $year)
-	{																								?>
-		<option  value="<?php echo $year;?>"> <?php echo $year;?> </option>							<?php
-	}																								?>
+	{																																				?>
+		<option  value="<?php echo $year;?>"> <?php echo $year;?> </option>																			<?php
+	}																																				?>
 	</select>
 	
-	<select id="jsMonth" name="jsMonth" onchange="return rerender();">								<?php
+	<select id="jsMonth" name="jsMonth" onchange="return rerender();">																				<?php
 	for($i=1; $i<=12; $i++)
-	{																								?>
-		<option  value="<?php echo $i;?>"><?php echo getMonth($i);?></option>						<?php
-	}																								?>
+	{																																				?>
+		<option value="<?php echo $i;?>" <?php if($month == $i) echo 'selected';?>><?php echo getMonth($i);?></option>					<?php
+	}																																				?>
 	</select>
 	</div>
 	<br><br>
 	<form name="arBulkUpdate" method="post" action="updateServer.php">
-	<table align="center" class="responstable">
+	<table align="center" class="responstable" style="width:70%;">
 		<tr>
-			<th style="width:30%">AR NAME</th>
-			<th style="width:15%;text-align:center;">TARGET</th>
-			<th style="width:15%;text-align:center;">RATE</th>
-			<th style="width:15%;text-align:center;">PAYMENT %</th> 
-			<th style="width:15%;text-align:center;">COMPANY TARGET</th> 
+			<th style="width:20%">AR NAME</th>
+			<th style="width:30%">SHOP</th>
+			<th style="width:10%">SAP</th>
+			<th style="width:10%;text-align:center;">TARGET</th>
+			<th style="width:10%;text-align:center;">RATE</th>
+			<th style="width:10%;text-align:center;">PAYMENT %</th> 
+			<th style="width:10%;text-align:center;">COMPANY TARGET</th> 
 		</tr>					<?php
 	while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
 	{
@@ -92,6 +96,8 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 		?>				
 		<tr>
 			<td><label align="center"><?php echo $arMap[$arId]; ?></td>	
+			<td><label align="center"><?php echo $shopMap[$arId]; ?></td>	
+			<td><label align="center"><?php echo $codeMap[$arId]; ?></td>	
 			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-target';?>" value="<?php echo $target; ?>"></td>	
 			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-rate';?>" value="<?php echo $rate; ?>"></td>		
 			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-pp';?>" value="<?php echo $pp; ?>"></td>		
