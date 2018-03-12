@@ -41,6 +41,9 @@ a{
 
 	<a href="calculatePointsTable.php?month=<?php echo $month;?>&year=<?php echo $year;?>" class="btn lg ghost">VIEW POINTS</a>
 	<br><br><br>
+	
+	<a href="companyTarget.php?month=<?php echo $month;?>&year=<?php echo $year;?>" class="btn lg ghost">COMPANY TARGET</a>
+	<br><br><br>	
 
 </div>
 

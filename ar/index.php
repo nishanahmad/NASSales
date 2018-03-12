@@ -25,7 +25,7 @@ if(isset($_SESSION["user_name"]))
 		<div class="row">
 			<h1>AR & POINTS</h1>
 			<br><br> 
-			<a href="ar_detailList.php" class="btn lg ghost" >AR DETAILS</a>
+			<a href="list.php" class="btn lg ghost" >AR LIST</a>
 			<br><br><br>	
 
 			<a href="../Target/" class="btn lg ghost" >TARGET</a>

@@ -113,7 +113,7 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 		$sql = "SELECT locked FROM target_locker WHERE year='$year' AND Month='$month' ";
 		$result = mysqli_query($con, $sql) or die(mysqli_error($con));
 		$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-		if($row['locked'] != true && count($row) > 0)
+		if($row['locked'] == 0)
 		{
 	?>		<div align="center"><input type="submit" name="submit" value="Submit"></div>		
 	<?php	
