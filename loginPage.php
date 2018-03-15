@@ -14,8 +14,6 @@ $("#login-button").click(function(event){
 </head>
 <body>
 	<div align="center">
-		<br/><br/>
-		<img src="images/logo.png"  width='400px' height='70px'/>
 		<div class="wrapper">
 			<div class="container">																											<?php 
 				if(isset($_GET['message']))
