@@ -21,7 +21,7 @@ $("#login-button").click(function(event){
 					echo '<font style="color:red;text-shadow: none;font-weight:bold;font-size:20px;">'.$_GET['message'].'</font>';
 				}						
 				else
-					echo '<h1>Welcome</h1>';																								?>						
+					echo '<h1>NAS AGENCIES</h1>';																								?>						
 				<form class="form" name="frmUser" method="post" action="user_login_session.php">
 					<input type="text" name="user_name" placeholder="Username" required>
 					<input type="password" name='password' placeholder="Password" required> 			

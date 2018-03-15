@@ -18,24 +18,25 @@ if(isset($_SESSION["user_name"]))
 		$fromDate = $dates['from_date'];
 		$toDate = $dates['to_date'];		
 	}	
-
-	if(isset($_GET['removeToday']))
-		$todayCheck = false;
 	
 	$today = date("Y-m-d");
-	if($today >= $fromDate && $today <= $toDate)
-		$todayCheck = true;
-	
-	
+
+	$arExtraMap = array();
 	$arList = mysqli_query($con,"SELECT id, ar_name, mobile, shop_name FROM ar_details WHERE isActive = 1") or die(mysqli_error($con));		 
 	foreach($arList as $arObject)
 	{
 		$arNameMap[$arObject['id']] = $arObject['ar_name'];
 		$arMobileMap[$arObject['id']] = $arObject['mobile'];
 		$arShopMap[$arObject['id']] = $arObject['shop_name'];
+		$arExtraMap[$arObject['id']] = 0;
 	}
 
-
+	$extraBagsList = mysqli_query($con,"SELECT ar_id,SUM(qty) FROM extra_bags WHERE date >= '$fromDate' AND date <= '$toDate' GROUP BY ar_id") or die(mysqli_error($con));											
+	foreach($extraBagsList as $extraBag)
+	{
+		$arExtraMap[$extraBag['ar_id']] = $extraBag['SUM(qty)'];
+	}	
+	
 	$array = implode("','",array_keys($arNameMap));	
 	$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND ar_id IN ('$array')") or die(mysqli_error($con));		 
 
@@ -73,16 +74,19 @@ if(isset($_SESSION["user_name"]))
 			$mainArray[$arId]['actual_sales'] = $mainArray[$arId]['actual_sales'] + $total;
 			
 			if($mainArray[$arId]['special_target'] != 0)
-				$mainArray[$arId]['percentage'] = round($mainArray[$arId]['actual_sales'] * 100 / $mainArray[$arId]['special_target'],0);
+				$mainArray[$arId]['percentage'] = round(  ($mainArray[$arId]['actual_sales'] + $arExtraMap[$arId]) * 100 / $mainArray[$arId]['special_target'],0);
 			else
-				$mainArray[$arId]['percentage'] = 0;
-			
-			
+				$mainArray[$arId]['percentage'] = 0;	
 		}
 	}
 ?>
 <html>
 <head>
+	<style>
+	.selected{
+		background-color:#ffb3b3 !important;
+	}
+	</style>
 	<link rel="stylesheet" type="text/css" href="../css/loader.css">	
 	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../css/responstable.css">	
@@ -99,6 +103,7 @@ if(isset($_SESSION["user_name"]))
 			$('#removeToday').prop('checked', true);
 		else
 			$('#removeToday').prop('checked', false);	
+				
 	} );
 
 	function refresh()
@@ -129,7 +134,16 @@ if(isset($_SESSION["user_name"]))
 			}
 		}
 	};
-
+	
+	$(function(){
+	  $(".responstable tr").each(function(){
+		var extra = $(this).find("td:eq(5)").text();   
+		if (extra != '0'){
+		  console.log(extra);			
+		  $(this).addClass('selected');
+		}
+	  });
+	});	
 	</script>
 	<title>Special Target</title>
 </head>
@@ -166,8 +180,8 @@ if(isset($_SESSION["user_name"]))
 			?>
 		</select>
 		&emsp;&emsp;&emsp;
-<?php				if($todayCheck)
-		{
+<?php				if($today >= $fromDate && $today <= $toDate)
+					{
 ?>						<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				
 <?php				}
 ?>
@@ -179,6 +193,7 @@ if(isset($_SESSION["user_name"]))
 				<th style="width:120px;">MOBILE</th>
 				<th>Spcl Target</th>
 				<th>Actual Sale</th>
+				<th>Extra Bags</th>
 				<th>Balance</th>
 				<th>Achieved%</th>	
 			</tr>												
@@ -191,7 +206,8 @@ if(isset($_SESSION["user_name"]))
 					<td><?php echo $arMobileMap[$arId];?></td>
 					<td><?php echo $subarray['special_target']?></td>
 					<td><?php echo $subarray['actual_sales']?></td>
-					<td><?php echo $subarray['special_target']-$subarray['actual_sales']; ?></td>							
+					<td><?php echo $arExtraMap[$arId];?></td>
+					<td><?php echo $subarray['special_target']-$subarray['actual_sales']-$arExtraMap[$arId]; ?></td>							
 					<td><?php echo $subarray['percentage']?></td>
 				</tr>																			<?php
 			}																					?>
