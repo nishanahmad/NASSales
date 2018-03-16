@@ -202,14 +202,14 @@ if(isset($_SESSION["user_name"]))
 							<th colspan="8" style="text-align:center;font-size:20px;"><?php echo $userName; ?></th>
 						</tr>	
 						<tr align="center">
-							<th style="text-align:left;width:250px;">AR</th>
-							<th style="width:220px;">SHOP</th>
-							<th style="width:120px;">MOBILE</th>
-							<th>Spcl Target</th>
-							<th>Actual Sale</th>
-							<th>Balance</th>
-							<th>Achieved%</th>	
-							<th>Extra Bags</th>												
+							<th style="text-align:left;width:24%;">AR</th>
+							<th style="text-align:left;width:27%;">SHOP</th>
+							<th style="width:14%;">MOBILE</th>
+							<th style="width:8%;">Spcl Target</th>
+							<th style="width:8%;">Actual Sale</th>
+							<th style="width:8%;">Balance</th>
+							<th style="width:3%;">Achieved%</th>
+							<th style="width:8%;">Extra Bags</th>											
 						</tr>																														<?php
 						$targetTotal = 0;
 						$saleTotal = 0;
@@ -242,8 +242,8 @@ if(isset($_SESSION["user_name"]))
 									$balance = 0;																										?>
 								
 								<tr>
-									<td><?php echo $arNameMap[$arId];?></td>
-									<td><?php echo $arShopMap[$arId];?></td>
+									<td style="text-align:left;"><?php echo $arNameMap[$arId];?></td>
+									<td style="text-align:left;"><?php echo $arShopMap[$arId];?></td>
 									<td><?php echo $arMobileMap[$arId];?></td>
 									<td><?php echo $spclTarget;?></td>
 									<td><?php echo $sale;?></td>
