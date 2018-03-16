@@ -61,14 +61,14 @@ if(isset($_SESSION["user_name"]))
 			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
 												AND entry_date <= '$toDate' AND entry_date < CURDATE() 
 												AND ar_id = '$arId'
-												AND bill_no not like '%can%' GROUP BY ar_id")
+												GROUP BY ar_id")
 												or die(mysqli_error($con));												
 		}
 		else
 			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
 												AND entry_date <= '$toDate'
 												AND ar_id = '$arId'
-												AND bill_no not like '%can%' GROUP BY ar_id")
+												GROUP BY ar_id")
 												or die(mysqli_error($con));								
 
 		foreach($sales as $sale)

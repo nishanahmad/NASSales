@@ -120,8 +120,7 @@ function rerender()
 
 				$sales = mysqli_query($con,"SELECT SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) 
 															AND '$month' = month(`entry_date`)
-															AND ar_id = '$arId'
-															AND bill_no not like '%can%'")
+															AND ar_id = '$arId'")
 															or die(mysqli_error($con));	
 
 				$actual_sales = 0;

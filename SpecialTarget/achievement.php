@@ -52,15 +52,15 @@ if(isset($_SESSION["user_name"]))
 		{
 			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
 												AND entry_date <= '$toDate' AND entry_date < CURDATE() 
-												AND ar_id = '$arId'
-												AND bill_no not like '%can%' GROUP BY ar_id")
+												AND ar_id = '$arId' 
+												GROUP BY ar_id")
 												or die(mysqli_error($con));												
 		}
 		else
 			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
 												AND entry_date <= '$toDate'
 												AND ar_id = '$arId'
-												AND bill_no not like '%can%' GROUP BY ar_id")
+												GROUP BY ar_id")
 												or die(mysqli_error($con));								
 
 		foreach($sales as $sale)
@@ -188,14 +188,14 @@ if(isset($_SESSION["user_name"]))
 		<br><br>
 		<table class="responstable" style="width:65% !important;">
 			<tr>
-				<th style="text-align:left;width:250px;">AR</th>
-				<th style="width:220px;">SHOP</th>
-				<th style="width:120px;">MOBILE</th>
-				<th>Spcl Target</th>
-				<th>Actual Sale</th>
-				<th>Extra Bags</th>
-				<th>Balance</th>
-				<th>Achieved%</th>	
+				<th style="text-align:left;width:25%;">AR</th>
+				<th style="width:25%;">SHOP</th>
+				<th style="width:15%;">MOBILE</th>
+				<th style="width:14%;">Spcl Target</th>
+				<th style="width:14%;">Actual Sale</th>
+				<th style="width:14%;">Extra Bags</th>
+				<th style="width:14%;">Balance</th>
+				<th style="width:9%;">Achieved%</th>	
 			</tr>												
 			<?php
 			$targetTotal = 0;
