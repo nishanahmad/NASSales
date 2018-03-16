@@ -19,8 +19,15 @@ if(isset($_SESSION["user_name"]))
 		$toDate = $dates['to_date'];		
 	}	
 	
-
-	$arList = mysqli_query($con,"SELECT id, ar_name, mobile, shop_name FROM ar_details WHERE isActive = 1") or die(mysqli_error($con));		 
+	$zeroTargetList = mysqli_query($con,"SELECT ar_id FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND special_target = 0") or die(mysqli_error($con));		 
+	foreach($zeroTargetList as $zeroTarget)
+	{
+		$zeroTargetMap[$zeroTarget['ar_id']] = null;
+	}
+	
+	$zeroTargetIds = implode("','",array_keys($zeroTargetMap));		
+	
+	$arList = mysqli_query($con,"SELECT id, ar_name, mobile, shop_name FROM ar_details WHERE isActive = 1 AND id NOT IN ('$zeroTargetIds') ") or die(mysqli_error($con));		 
 	foreach($arList as $arObject)
 	{
 		$arNameMap[$arObject['id']] = $arObject['ar_name'];
@@ -128,7 +135,7 @@ if(isset($_SESSION["user_name"]))
 	
 	$(function(){
 	  $(".responstable tr").each(function(){
-		var extra = $(this).find("td:eq(5)").text();   
+		var extra = $(this).find("td:eq(7)").text();   
 		if (extra != '0'){
 		  console.log(extra);			
 		  $(this).addClass('selected');
@@ -184,13 +191,14 @@ if(isset($_SESSION["user_name"]))
 				<th style="width:14%;">MOBILE</th>
 				<th style="width:8%;">Spcl Target</th>
 				<th style="width:8%;">Actual Sale</th>
-				<th style="width:8%;">Extra Bags</th>
 				<th style="width:8%;">Balance</th>
-				<th style="width:3%;">Achieved%</th>	
+				<th style="width:3%;">Achieved%</th>
+				<th style="width:8%;">Extra Bags</th>				
 			</tr>																																<?php
 			$targetTotal = 0;
 			$saleTotal = 0;
 			$extraTotal = 0;
+			$balanceTotal = 0;
 			foreach($arNameMap as $arId =>$arName)
 			{		
 				if(isset($arTargetMap[$arId]))
@@ -209,7 +217,11 @@ if(isset($_SESSION["user_name"]))
 				if($spclTarget != 0)
 					$percentage = round(  ($sale + $extraBags) * 100 / $spclTarget,0);
 				else
-					$percentage = 0;																												?>
+					$percentage = 0;
+
+				$balance = $spclTarget-$sale-$extraBags;
+				if($balance < 0)
+					$balance = 0;																													?>
 				
 				<tr align="center">
 					<td style="text-align:left;"><?php echo $arName;?></td>
@@ -217,23 +229,23 @@ if(isset($_SESSION["user_name"]))
 					<td><?php echo $arMobileMap[$arId];?></td>
 					<td><?php echo $spclTarget;?></td>
 					<td><?php echo $sale;?></td>
-					<td><?php echo $extraBags;?></td>
-					<td><?php echo $spclTarget-$sale-$extraBags; ?></td>							
+					<td><?php echo $balance ?></td>							
 					<td><?php echo $percentage.'%';?></td>
+					<td><?php echo $extraBags;?></td>
 				</tr>																																<?php
 				$targetTotal = $targetTotal + $spclTarget;
 				$saleTotal = $saleTotal + $sale;
-				$extraTotal = $extraTotal + $arExtraMap[$arId];																										
+				$extraTotal = $extraTotal + $arExtraMap[$arId];
+				$balanceTotal = $balanceTotal + $balance;																														
 			}
-			$balanceTotal = $targetTotal - $saleTotal - $extraTotal;
 			$percentageTotal = round(  ($saleTotal + $extraTotal) * 100 / $targetTotal,0);																?>
 			<tr style="line-height:50px;background-color:#BEBEBE !important;font-family: Arial Black;">
 				<td colspan="3" style="text-align:right;font-size:20px;">Total</td>
 				<td style="font-size:15px;"><?php echo $targetTotal;?></td>
 				<td style="font-size:15px;"><?php echo $saleTotal;?></td>
-				<td style="font-size:15px;"><?php echo $extraTotal;?></td>
 				<td style="font-size:15px;"><?php echo $balanceTotal;?></td>
 				<td style="font-size:15px;"><?php echo $percentageTotal.'%';?></td>
+				<td style="font-size:15px;"><?php echo $extraTotal;?></td>				
 			</tr>
 		</table>
 		<br><br><br><br>
