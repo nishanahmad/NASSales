@@ -4,8 +4,8 @@ if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
 
-	$mainArray = array();
-
+	$today = date("Y-m-d");
+	
 	if(isset($_GET['fromDate']) && isset($_GET['toDate']))
 	{
 		$fromDate = $_GET['fromDate'];
@@ -19,16 +19,7 @@ if(isset($_SESSION["user_name"]))
 		$toDate = $dates['to_date'];		
 	}	
 	
-	$today = date("Y-m-d");
-	
 
-	$userObjects = mysqli_query($con,"SELECT user_id, user_name FROM users") or die(mysqli_error($con));		 
-	foreach($userObjects as $user)
-	{
-		$userNameMap[$user['user_id']] = $user['user_name'];
-	}	
-
-	$arExtraMap = array();		
 	$arList = mysqli_query($con,"SELECT id, ar_name, mobile, shop_name, user_id FROM ar_details WHERE isActive = 1") or die(mysqli_error($con));		 
 	foreach($arList as $arObject)
 	{
@@ -36,66 +27,60 @@ if(isset($_SESSION["user_name"]))
 		$arMobileMap[$arObject['id']] = $arObject['mobile'];
 		$arUserMap[$arObject['id']] = $arObject['user_id'];
 		$arShopMap[$arObject['id']] = $arObject['shop_name'];
-		$arExtraMap[$arObject['id']] = 0;		
+		$arExtraMap[$arObject['id']] = 0;
+		$userNameMap[$arObject['user_id']] = null;		
 	}
 
+	$userIds = implode("','",array_keys($userNameMap));	
+	
+	$userObjects = mysqli_query($con,"SELECT user_id, user_name FROM users WHERE user_id IN ('$userIds') ") or die(mysqli_error($con));		 
+	foreach($userObjects as $user)
+	{
+		$userNameMap[$user['user_id']] = $user['user_name'];
+	}	
+
+	
 	$extraBagsList = mysqli_query($con,"SELECT ar_id,SUM(qty) FROM extra_bags WHERE date >= '$fromDate' AND date <= '$toDate' GROUP BY ar_id") or die(mysqli_error($con));												
 	foreach($extraBagsList as $extraBag)
 	{
 		$arExtraMap[$extraBag['ar_id']] = $extraBag['SUM(qty)'];
 	}		
 
-	$array = implode("','",array_keys($arNameMap));	
-	$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND ar_id IN ('$array')") or die(mysqli_error($con));		 
-
-	foreach($ar_detail as $ar)
-	{	
-		$arId = $ar['ar_id'];
-		$mainArray[$arId] = array();
-		$mainArray[$arId]['special_target'] = $ar['special_target'];
-		$mainArray[$arId]['actual_sales'] = 0;
-		$mainArray[$arId]['percentage'] = 0;
-		
-		if(isset($_GET['removeToday']) && $_GET['removeToday'] == 'true')
-		{
-			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
-												AND entry_date <= '$toDate' AND entry_date < CURDATE() 
-												AND ar_id = '$arId'
-												GROUP BY ar_id")
-												or die(mysqli_error($con));												
-		}
-		else
-			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
-												AND entry_date <= '$toDate'
-												AND ar_id = '$arId'
-												GROUP BY ar_id")
-												or die(mysqli_error($con));								
-
-		foreach($sales as $sale)
-		{
-			$lpp = $sale['SUM(srp)'];
-			$hdpe = $sale['SUM(srh)'];
-			$cstl = $sale['SUM(f2r)'];
-			$return_bag = $sale['SUM(return_bag)'];
-			$total = $lpp + $hdpe + $cstl - $return_bag;
-			
-			$mainArray[$arId]['actual_sales'] = $mainArray[$arId]['actual_sales'] + $total;
-			
-			if($mainArray[$arId]['special_target'] != 0)
-				$mainArray[$arId]['percentage'] = round( ($mainArray[$arId]['actual_sales'] + $arExtraMap[$arId]) * 100 / $mainArray[$arId]['special_target'],0);
-			else
-				$mainArray[$arId]['percentage'] = 0;
-			
-			
-		}
-		
-		$userGrouping = array();
-		foreach($mainArray as $arId => $subarray)
-		{
-			$userGrouping[$arUserMap[$arId]][$arId] = $subarray;
-		}
+	$arIds = implode("','",array_keys($arNameMap));	
+	
+	$targetList = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND ar_id IN ('$arIds')") or die(mysqli_error($con));		 
+	foreach($targetList as $target)	
+	{
+		$arTargetMap[$target['ar_id']] = $target['special_target'];
 	}
-	ksort($userGrouping);
+		
+	if(isset($_GET['removeToday']) && $_GET['removeToday'] == 'true')
+	{
+		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
+											AND entry_date <= '$toDate' AND entry_date < CURDATE() 
+											AND ar_id IN ('$arIds')
+											GROUP BY ar_id")
+											or die(mysqli_error($con));												
+	}
+	else
+	{
+		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$fromDate'
+											AND entry_date <= '$toDate'
+											AND ar_id IN ('$arIds')
+											GROUP BY ar_id")
+											or die(mysqli_error($con));										
+	}	
+
+	foreach($sales as $sale)
+	{
+		$lpp = $sale['SUM(srp)'];
+		$hdpe = $sale['SUM(srh)'];
+		$cstl = $sale['SUM(f2r)'];
+		$return_bag = $sale['SUM(return_bag)'];
+		$total = $lpp + $hdpe + $cstl - $return_bag;
+		
+		$arSaleMap[$sale['ar_id']] = $total;
+	}
 ?>
 <html>
 <head>
@@ -201,37 +186,77 @@ if(isset($_SESSION["user_name"]))
 			<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				<?php
 		}																																?>
 		<br><br>																														<?php
-			foreach($userGrouping as $userId =>$subArray1)
-			{																															?>
-			<table class="responstable" style="width:65% !important;">
-				<tr style="line-height: 30px;">
-					<th colspan="8" style="text-align:center;font-size:20px;"><?php echo $userNameMap[$userId]; ?></th>
-				</tr>	
-				<tr align="center">
-					<th style="text-align:left;width:250px;">AR</th>
-					<th style="width:220px;">SHOP</th>
-					<th style="width:120px;">MOBILE</th>
-					<th>Spcl Target</th>
-					<th>Actual Sale</th>
-					<th>Extra Bags</th>					
-					<th>Balance</th>
-					<th>Achieved%</th>	
-				</tr>																														<?php
-				foreach($subArray1 as $arId =>$subarray2)			
-				{																															?>
-				<tr>
-					<td><?php echo $arNameMap[$arId];?></td>
-					<td><?php echo $arShopMap[$arId];?></td>
-					<td><?php echo $arMobileMap[$arId];?></td>
-					<td><?php echo $subarray2['special_target']?></td>
-					<td><?php echo $subarray2['actual_sales']?></td>
-					<td><?php echo $arExtraMap[$arId];?></td>					
-					<td><?php echo $subarray2['special_target']-$subarray2['actual_sales']-$arExtraMap[$arId]; ?></td>							
-					<td><?php echo $subarray2['percentage']?></td>
-				</tr>																<?php
-				}																	?>
-			</table><br><br><br><br>														<?php
-			}																		?>
+			foreach($userNameMap as $userId =>$userName)
+			{
+				if($userId == $_SESSION['user_id'] || $_SESSION['role'] == 'admin' || $_SESSION['role'] == 'manager')												
+				{																																?>
+					<table class="responstable" style="width:65% !important;">
+						<tr style="line-height: 30px;">
+							<th colspan="8" style="text-align:center;font-size:20px;"><?php echo $userName; ?></th>
+						</tr>	
+						<tr align="center">
+							<th style="text-align:left;width:250px;">AR</th>
+							<th style="width:220px;">SHOP</th>
+							<th style="width:120px;">MOBILE</th>
+							<th>Spcl Target</th>
+							<th>Actual Sale</th>
+							<th>Extra Bags</th>					
+							<th>Balance</th>
+							<th>Achieved%</th>	
+						</tr>																														<?php
+						$targetTotal = 0;
+						$saleTotal = 0;
+						$extraTotal = 0;					
+						foreach($arUserMap as $arId =>$userId2)			
+						{
+							if($userId == $userId2)
+							{
+								if(isset($arTargetMap[$arId]))
+									$spclTarget = $arTargetMap[$arId];
+								else
+									$spclTarget = 0;
+								if(isset($arSaleMap[$arId]))
+									$sale = $arSaleMap[$arId];
+								else
+									$sale = 0;
+								if(isset($arExtraMap[$arId]))
+									$extraBags = $arExtraMap[$arId];
+								else
+									$extraBags = 0;																													
+								
+								if($spclTarget != 0)
+									$percentage = round(  ($sale + $extraBags) * 100 / $spclTarget,0);
+								else
+									$percentage = 0;																									?>
+								<tr>
+									<td><?php echo $arNameMap[$arId];?></td>
+									<td><?php echo $arShopMap[$arId];?></td>
+									<td><?php echo $arMobileMap[$arId];?></td>
+									<td><?php echo $spclTarget;?></td>
+									<td><?php echo $sale;?></td>
+									<td><?php echo $extraBags;?></td>					
+									<td><?php echo $spclTarget-$sale-$extraBags; ?></td>							
+									<td><?php echo $percentage;?></td>
+								</tr>																													<?php
+								$targetTotal = $targetTotal + $spclTarget;
+								$saleTotal = $saleTotal + $sale;
+								$extraTotal = $extraTotal + $arExtraMap[$arId];							
+							}																														
+						}
+						$balanceTotal = $targetTotal - $saleTotal - $extraTotal;
+						$percentageTotal = round(  ($saleTotal + $extraTotal) * 100 / $targetTotal,0);													?>
+						<tr style="line-height:50px;background-color:#BEBEBE !important;font-family: Arial Black;">
+							<td colspan="3" style="text-align:right;font-size:20px;">Total</td>
+							<td style="font-size:15px;"><?php echo $targetTotal;?></td>
+							<td style="font-size:15px;"><?php echo $saleTotal;?></td>
+							<td style="font-size:15px;"><?php echo $extraTotal;?></td>
+							<td style="font-size:15px;"><?php echo $balanceTotal;?></td>
+							<td style="font-size:15px;"><?php echo $percentageTotal.'%';?></td>
+						</tr>					
+					</table>																							
+					<br><br><br><br>																													<?php
+				}
+			}																																			?>
 		
 		</div>
 </body>
