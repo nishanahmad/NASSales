@@ -10,10 +10,27 @@ if(isset($_SESSION["user_name"]))
 	$newDate = date("Y-m-d", strtotime($originalDate));
 	$arId = $_POST['ar'];
 	$truck = $_POST['truck'];
-	$srp = $_POST['srp'];
-	$srh = $_POST['srh'];
-	$f2r = $_POST['f2r'];
-	$return = $_POST['return'];
+	
+	if( !empty($_POST['srp']) )
+		$srp = $_POST['srp'];
+	else
+		$srp = null;
+	
+	if( !empty($_POST['srh']) )
+		$srh = $_POST['srh'];
+	else
+		$srh = null;
+	
+	if( !empty($_POST['f2r']) )
+		$f2r = $_POST['f2r'];
+	else
+		$f2r = null;
+	
+	if( !empty($_POST['return_bag']) )
+		$return = $_POST['return_bag'];
+	else
+		$return = null;	
+	
 	$remarks = $_POST['remarks'];
 	$bill = $_POST['bill'];
 	$customerName = $_POST['customerName'];

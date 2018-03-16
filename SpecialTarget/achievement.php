@@ -198,19 +198,35 @@ if(isset($_SESSION["user_name"]))
 				<th>Achieved%</th>	
 			</tr>												
 			<?php
+			$targetTotal = 0;
+			$saleTotal = 0;
+			$extraTotal = 0;
 			foreach($mainArray as $arId =>$subarray)
-			{																					?>
+			{				
+				$targetTotal = $targetTotal + $subarray['special_target'];
+				$saleTotal = $saleTotal + $subarray['actual_sales'];
+				$extraTotal = $extraTotal + $arExtraMap[$arId];																						?>
 				<tr align="center">
 					<td style="text-align:left;"><?php echo $arNameMap[$arId];?></td>
 					<td><?php echo $arShopMap[$arId];?></td>
 					<td><?php echo $arMobileMap[$arId];?></td>
-					<td><?php echo $subarray['special_target']?></td>
-					<td><?php echo $subarray['actual_sales']?></td>
+					<td><?php echo $subarray['special_target'];?></td>
+					<td><?php echo $subarray['actual_sales'];?></td>
 					<td><?php echo $arExtraMap[$arId];?></td>
 					<td><?php echo $subarray['special_target']-$subarray['actual_sales']-$arExtraMap[$arId]; ?></td>							
 					<td><?php echo $subarray['percentage']?></td>
-				</tr>																			<?php
-			}																					?>
+				</tr>																																<?php
+			}
+			$balanceTotal = $targetTotal - $saleTotal - $extraTotal;
+			$percentage = round(  ($saleTotal + $extraTotal) * 100 / $targetTotal,0);																?>
+			<tr style="line-height:50px;background-color:#BEBEBE !important;font-family: Arial Black;">
+				<td colspan="3" style="text-align:right;font-size:20px;">Total</td>
+				<td style="font-size:15px;"><?php echo $targetTotal;?></td>
+				<td style="font-size:15px;"><?php echo $saleTotal;?></td>
+				<td style="font-size:15px;"><?php echo $extraTotal;?></td>
+				<td style="font-size:15px;"><?php echo $balanceTotal;?></td>
+				<td style="font-size:15px;"><?php echo $percentage.'%';?></td>
+			</tr>
 		</table>
 		<br><br><br><br>
 		</div>
