@@ -91,6 +91,7 @@ if(isset($_SESSION["user_name"]))
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 
 	<script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="../js/jquery.floatThead.min.js"></script>
 	<script type="text/javascript" language="javascript" >
 	$(document).ready(function() {
 
@@ -101,6 +102,9 @@ if(isset($_SESSION["user_name"]))
 			$('#removeToday').prop('checked', true);
 		else
 			$('#removeToday').prop('checked', false);	
+		
+		var $table = $('.responstable');
+		$table.floatThead();		
 				
 	} );
 
@@ -137,11 +141,10 @@ if(isset($_SESSION["user_name"]))
 	  $(".responstable tr").each(function(){
 		var extra = $(this).find("td:eq(7)").text();   
 		if (extra != '0'){
-		  console.log(extra);			
 		  $(this).addClass('selected');
 		}
 	  });
-	});	
+	});		
 	</script>
 	<title>Special Target</title>
 </head>
@@ -185,16 +188,18 @@ if(isset($_SESSION["user_name"]))
 ?>
 		<br><br>
 		<table class="responstable" style="width:65% !important;">
-			<tr>
-				<th style="text-align:left;width:24%;">AR</th>
-				<th style="text-align:left;width:27%;">SHOP</th>
-				<th style="width:14%;">MOBILE</th>
-				<th style="width:8%;">Spcl Target</th>
-				<th style="width:8%;">Actual Sale</th>
-				<th style="width:8%;">Balance</th>
-				<th style="width:3%;">Achieved%</th>
-				<th style="width:8%;">Extra Bags</th>				
-			</tr>																																<?php
+			<thead>
+				<tr>
+					<th style="text-align:left;width:24%;">AR</th>
+					<th style="text-align:left;width:27%;">SHOP</th>
+					<th style="width:14%;">MOBILE</th>
+					<th style="width:8%;">Spcl Target</th>
+					<th style="width:8%;">Actual Sale</th>
+					<th style="width:8%;">Balance</th>
+					<th style="width:3%;">Achieved%</th>
+					<th style="width:8%;">Extra Bags</th>				
+				</tr>																																
+			</thead>																																							<?php
 			$targetTotal = 0;
 			$saleTotal = 0;
 			$extraTotal = 0;
