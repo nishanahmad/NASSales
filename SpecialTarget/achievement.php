@@ -188,14 +188,14 @@ if(isset($_SESSION["user_name"]))
 		<br><br>
 		<table class="responstable" style="width:65% !important;">
 			<tr>
-				<th style="text-align:left;width:25%;">AR</th>
-				<th style="width:25%;">SHOP</th>
-				<th style="width:15%;">MOBILE</th>
-				<th style="width:14%;">Spcl Target</th>
-				<th style="width:14%;">Actual Sale</th>
-				<th style="width:14%;">Extra Bags</th>
-				<th style="width:14%;">Balance</th>
-				<th style="width:9%;">Achieved%</th>	
+				<th style="text-align:left;width:24%;">AR</th>
+				<th style="text-align:left;width:27%;">SHOP</th>
+				<th style="width:14%;">MOBILE</th>
+				<th style="width:8%;">Spcl Target</th>
+				<th style="width:8%;">Actual Sale</th>
+				<th style="width:8%;">Extra Bags</th>
+				<th style="width:8%;">Balance</th>
+				<th style="width:3%;">Achieved%</th>	
 			</tr>												
 			<?php
 			$targetTotal = 0;
@@ -208,7 +208,7 @@ if(isset($_SESSION["user_name"]))
 				$extraTotal = $extraTotal + $arExtraMap[$arId];																						?>
 				<tr align="center">
 					<td style="text-align:left;"><?php echo $arNameMap[$arId];?></td>
-					<td><?php echo $arShopMap[$arId];?></td>
+					<td style="text-align:left;"><?php echo $arShopMap[$arId];?></td>
 					<td><?php echo $arMobileMap[$arId];?></td>
 					<td><?php echo $subarray['special_target'];?></td>
 					<td><?php echo $subarray['actual_sales'];?></td>
