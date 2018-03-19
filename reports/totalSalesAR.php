@@ -112,7 +112,7 @@ if(isset($_SESSION["user_name"]))
 		<td colspan="7"></td>
 	</tr>
 	<tr style="font-weight:bold;">
-		<td colspan="3" style="text-align:right">TOTAL</td>
+		<td colspan="4" style="text-align:right">TOTAL</td>
 		<td><?php echo $srp;?></td>
 		<td><?php echo $srh;?></td>
 		<td><?php echo $f2r;?></td>
