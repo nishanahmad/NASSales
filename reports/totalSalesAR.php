@@ -109,9 +109,9 @@ if(isset($_SESSION["user_name"]))
 	}
 ?>	
 	<tr>
-		<td colspan="7"></td>
+		<td colspan="8"></td>
 	</tr>
-	<tr style="font-weight:bold;">
+	<tr style="line-height:50px;background-color:#BEBEBE !important;font-family: Arial Black;">
 		<td colspan="4" style="text-align:right">TOTAL</td>
 		<td><?php echo $srp;?></td>
 		<td><?php echo $srh;?></td>

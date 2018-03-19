@@ -17,18 +17,93 @@ if(isset($_SESSION["user_name"]))
 		$month = (int)date("m");
 	}
 
+	$zeroTargetList = mysqli_query($con,"SELECT ar_id FROM target WHERE year = '$year' AND month  = '$month' AND target = 0") or die(mysqli_error($con));		 
+	foreach($zeroTargetList as $zeroTarget)
+	{
+		$zeroTargetMap[$zeroTarget['ar_id']] = null;
+	}
+	
+	$zeroTargetIds = implode("','",array_keys($zeroTargetMap));	
+	
+	$arObjects =  mysqli_query($con,"SELECT id,ar_name,mobile,shop_name,sap_code FROM ar_details WHERE  isActive = 1 AND id NOT IN ('$zeroTargetIds') ORDER BY ar_name ASC ") or die(mysqli_error($con));		 
+	foreach($arObjects as $ar)
+	{
+		$arMap[$ar['id']]['name'] = $ar['ar_name'];
+		$arMap[$ar['id']]['mobile'] = $ar['mobile'];
+		$arMap[$ar['id']]['shop'] = $ar['shop_name'];
+		$arMap[$ar['id']]['sap'] = $ar['sap_code'];
+	}				
+	
+	$arIds = implode("','",array_keys($arMap));
+	$targetObjects = mysqli_query($con,"SELECT ar_id, target, payment_perc,rate FROM target WHERE  month = '$month' AND Year='$year' AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
+	foreach($targetObjects as $target)
+	{
+		$targetMap[$target['ar_id']]['target'] = $target['target'];
+		$targetMap[$target['ar_id']]['rate'] = $target['rate'];
+		$targetMap[$target['ar_id']]['payment_perc'] = $target['payment_perc'];
+	}
+	
+
+
+	$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) AND '$month' = month(`entry_date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
+
+	$mainArray = array();
+	foreach($sales as $sale)
+	{
+		$arId = $sale['ar_id'];
+		$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
+		if(isset($targetMap[$arId]))
+		{
+			$points = round($total * $targetMap[$arId]['rate'],0);
+			$actual_perc = round($total * 100 / $targetMap[$arId]['target'],0);
+			
+			if($year < 2017 || ($year == 2017 && $month <= 9))
+			{
+				if($actual_perc < 30)			$point_perc = 0;
+				else if($actual_perc <= 40)		$point_perc = 20;
+				else if($actual_perc <= 59)		$point_perc = 30;
+				else if($actual_perc <= 69)		$point_perc = 40;
+				else if($actual_perc <= 79)		$point_perc = 60;
+				else if($actual_perc <= 89)		$point_perc = 80;
+				else if($actual_perc <= 95)		$point_perc = 90;
+				else if($actual_perc >= 96)		$point_perc = 100;										
+			}
+			else
+			{
+				if($actual_perc <= 70)			$point_perc = 0;
+				else if($actual_perc <= 80)		$point_perc = 50;
+				else if($actual_perc <= 95)		$point_perc = 70;
+				else if($actual_perc >= 96)		$point_perc = 100;										
+			}
+
+			$achieved_points = round($points * $point_perc/100,0);
+			
+			if($total > 0)		
+				$payment_points = round($achieved_points * $targetMap[$arId]['payment_perc']/100,0);
+			else
+				$payment_points = -50;			
+
+			$mainArray[$arId]['actual_sale'] = $total;
+			$mainArray[$arId]['points'] = $points;
+			$mainArray[$arId]['actual_perc'] = $actual_perc;
+			$mainArray[$arId]['point_perc'] = $point_perc;
+			$mainArray[$arId]['achieved_points'] = $achieved_points;
+			$mainArray[$arId]['payment_points'] = $payment_points;			
+		}
+	}	
 ?>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="../css/loader.css">	
 <link rel="stylesheet" type="text/css" href="../css/responstable.css">
 <link rel="stylesheet" type="text/css" href="../css/glow_box.css">
-
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 <script type="text/javascript" language="javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="../js/jquery.floatThead.min.js"></script>
 <script src="../js/fileSaver.js"></script>
 <script src="../js/tableExport.js"></script>
 <script type="text/javascript" language="javascript">
-$(window).on('load', function() {
+$(document).ready(function() {
 	$("#loader").hide();
 
  	$("#button").click(function(){
@@ -38,7 +113,11 @@ $(window).on('load', function() {
 				ignoreCSS: ".ignore"   // (selector, selector[]), selector(s) to exclude from the exported file
 		});
 	});		
+
+	var $table = $('.responstable');
+	$table.floatThead();				
 } );
+
 
 function rerender()
 {
@@ -82,7 +161,7 @@ function rerender()
 			$yearList = mysqli_query($con, "SELECT DISTINCT year FROM target  WHERE year <> $year ORDER BY year DESC") or die(mysqli_error($con));	
 			foreach($yearList as $yearObj) 
 			{
-?>				<option value="<?php echo $yearObj['year'];?>"><?php echo $yearObj['year'];?></option>		<?php	
+?>				<option value="<?php echo $yearObj['year'];?>"><?php echo $yearObj['year'];?></option>											<?php	
 			}
 ?>		</select>
 		<br><br>
@@ -90,108 +169,52 @@ function rerender()
 		<img src="../images/excel.png" id="button" height="50px" width="45ypx" />
 		<br/><br/>
 
-		<table id="Points" class="responstable" style="width:80% !important">
+		<table id="Points" class="responstable" style="width:70% !important">
+		<thead>
 			<tr>
-				<th style="width:200px"></th>
-				<th style="width:90px">Mobile</th>
+				<th style="width:20%;text-align:left;">AR</th>
+				<th style="width:12%;">Mobile</th>
+				<th style="width:25%;text-align:left;">Shop</th>
+				<th style="width:10%;">SAP</th>
 				<th>Target</th>
-				<th>Actual Sales</th>
-				<th>Rate</th>
+				<th>Sale</th>
+				<!--th>Rate</th>
 				<th>Points</th>
 				<th>Actual%</th>	
 				<th>Point%</th>	
 				<th>Payment%</th>	
-				<th>Achieved Pnts</th>	
-				<th>Payment Pnts</th>	
+				<th>Achieved Pnts</th-->	
+				<th>Points</th>	
 			</tr>
+		</thead>	
 							
-<?php		$arObjects =  mysqli_query($con,"SELECT id,ar_name,mobile FROM ar_details WHERE  isActive = 1 ORDER BY ar_name ASC ") or die(mysqli_error($con));		 
-			foreach($arObjects as $ar)
-			{
-				$arMap[$ar['id']] = $ar['ar_name'];
-				$mobileMap[$ar['id']] = $ar['mobile'];
-			}			
-
-			$targetList = mysqli_query($con,"SELECT ar_id, target, payment_perc,rate FROM target WHERE  month = '$month' AND Year='$year' AND ar_id IN('".implode("','",array_keys($arMap))."')") or die(mysqli_error($con));		 
-
-			foreach($targetList as $row)
-			{
-				$target = $row['target'];
-				$rate = $row['rate'];
-				$arId = $row['ar_id'];
-
-				$sales = mysqli_query($con,"SELECT SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) 
-															AND '$month' = month(`entry_date`)
-															AND ar_id = '$arId'")
-															or die(mysqli_error($con));	
-
-				$actual_sales = 0;
-				$points = 0;	
-				$actual_perc = 0;
-				$point_perc = 0;
-				$payment_perc  = $row['payment_perc'];
-				$achieved_points = 0;
-				$payment_points = 0;
-
-				foreach($sales as $sales_row)
+																																				<?php
+			foreach($mainArray as $arId => $subArray)
+			{		
+				if(isset($targetMap[$arId]))
 				{
-					// Assign clean variables
-					$srp = $sales_row['SUM(srp)'];
-					$srh = $sales_row['SUM(srh)'];
-					$f2r = $sales_row['SUM(f2r)'];
-					$return_bag = $sales_row['SUM(return_bag)'];
-					$total = $srp + $srh + $f2r - $return_bag;
-
-
-					$actual_sales = $actual_sales + $total;
-					$points = round($actual_sales * $rate,0);
-
-
-					if($target != 0)				$actual_perc = round($actual_sales * 100 / $target,0);
-					else							$actual_perc = 0;
-					
-					if($year < 2017 || ($year == 2017 && $month <= 9))
-					{
-						if($actual_perc < 30)			$point_perc = 0;
-						else if($actual_perc <= 40)		$point_perc = 20;
-						else if($actual_perc <= 59)		$point_perc = 30;
-						else if($actual_perc <= 69)		$point_perc = 40;
-						else if($actual_perc <= 79)		$point_perc = 60;
-						else if($actual_perc <= 89)		$point_perc = 80;
-						else if($actual_perc <= 95)		$point_perc = 90;
-						else if($actual_perc >= 96)		$point_perc = 100;										
-					}
-					else
-					{
-						if($actual_perc <= 70)			$point_perc = 0;
-						else if($actual_perc <= 80)		$point_perc = 50;
-						else if($actual_perc <= 95)		$point_perc = 70;
-						else if($actual_perc >= 96)		$point_perc = 100;										
-					}
-
-					$achieved_points = round($points * $point_perc/100,0);
-					$payment_points = round($achieved_points * $payment_perc/100,0);
-
-				}	
-				if($actual_sales <= 0 && $target >0)
-					$payment_points = -50;
-?>
+					$target = $targetMap[$arId]['target'];
+					$rate = $targetMap[$arId]['rate'];
+					$payment_perc = $targetMap[$arId]['payment_perc'];
+				}																																?>
 				<tr align="center">
-				<td><?php echo $arMap[$arId];?></b></td>
-				<td><?php if(isset($mobileMap[$arId])) echo $mobileMap[$arId];?></b></td>
+				<td style="text-align:left;"><?php echo $arMap[$arId]['name'];?></b></td>
+				<td><?php echo $arMap[$arId]['mobile'];?></b></td>
+				<td style="text-align:left;"><?php echo $arMap[$arId]['shop'];?></b></td>
+				<td><?php echo $arMap[$arId]['sap'];?></b></td>
 				<td><?php echo $target;?></td>
-				<td><?php echo $actual_sales;?></td>
-				<td><?php echo $rate;?></td>
-				<td><?php echo $points;?></td>
-				<td><?php echo $actual_perc;?></td>
-				<td><?php echo $point_perc;?></td>
-				<td><?php echo $payment_perc;?></td>
-				<td><?php echo $achieved_points;?></td>
-				<td><?php echo $payment_points;?></td>
-				</tr>
-<?php		}
-?>
+				<td><?php echo $subArray['actual_sale'];?></td>
+				<!--td><?php //echo $rate;?></td>
+				<td><?php //echo $subArray['points'];?></td>
+				<td><?php //echo $subArray['actual_perc'].'%';?></td>
+				<td><?php //echo $subArray['point_perc'].'%';?></td>
+				<td><?php //echo $payment_perc;?></td>
+				<td><?php //echo $subArray['achieved_points'];?></td-->
+				<td><?php echo '<b>'.$subArray['payment_points'].'</b>';?></td>
+				</tr>																															<?php
+			}																																	?>
 		</table>
+		<br/><br/><br/><br/>
 	</div>
 </body>
 </html>

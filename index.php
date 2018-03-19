@@ -41,8 +41,8 @@ a{
 	<a href="sales/list.php" class="btn lg ghost">ALL SALES</a>
     <br><br><br><br>
 	
-	<a href="company/" class="btn lg ghost">COMPANY SALE</a>
-    <br><br><br>	
+	<!--a href="company/" class="btn lg ghost">COMPANY SALE</a>
+    <br><br><br-->	
 		
    	<a href="ar/" class="btn lg ghost">AR DETAILS & POINTS</a>
     <br><br><br>	
