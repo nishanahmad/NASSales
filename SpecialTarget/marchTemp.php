@@ -133,7 +133,7 @@ if(isset($_SESSION["user_name"]))
 	
 	$(function(){
 	  $(".responstable tr").each(function(){
-		var extra = $(this).find("td:eq(7)").text();   
+		var extra = $(this).find("td:eq(8)").text();   
 		if (extra != '0'){
 		  $(this).addClass('selected');
 		}
