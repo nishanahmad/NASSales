@@ -33,6 +33,9 @@ if(isset($_SESSION["user_name"]))
 
 			<a href="../SpecialTarget/" class="btn lg ghost">SPECIAL TARGET</a>
 			<br><br><br>
+			
+			<a href="../redemption/" class="btn lg ghost">REDEMPTION</a>
+			<br><br><br>			
 		</div>
 	</body>
 </html>
