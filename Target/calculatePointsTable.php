@@ -160,12 +160,12 @@ function rerender()
 				<th style="width:10%;">SAP</th>
 				<th>Target</th>
 				<th>Sale</th>
-				<!--th>Rate</th>
+				<th>Rate</th>
 				<th>Points</th>
 				<th>Actual%</th>	
 				<th>Point%</th>	
 				<th>Payment%</th>	
-				<th>Achieved Pnts</th-->	
+				<th>Achieved Pnts</th>
 				<th>Points</th>	
 			</tr>
 		</thead>	
@@ -186,12 +186,12 @@ function rerender()
 				<td><?php echo $arMap[$arId]['sap'];?></b></td>
 				<td><?php echo $target;?></td>
 				<td><?php echo $subArray['actual_sale'];?></td>
-				<!--td><?php //echo $rate;?></td>
-				<td><?php //echo $subArray['points'];?></td>
-				<td><?php //echo $subArray['actual_perc'].'%';?></td>
-				<td><?php //echo $subArray['point_perc'].'%';?></td>
-				<td><?php //echo $payment_perc;?></td>
-				<td><?php //echo $subArray['achieved_points'];?></td-->
+				<td><?php echo $rate;?></td>
+				<td><?php echo $subArray['points'];?></td>
+				<td><?php echo $subArray['actual_perc'].'%';?></td>
+				<td><?php echo $subArray['point_perc'].'%';?></td>
+				<td><?php echo $payment_perc;?></td>
+				<td><?php echo $subArray['achieved_points'];?></td>
 				<td><?php echo '<b>'.$subArray['payment_points'].'</b>';?></td>
 				</tr>																															<?php
 			}																																	?>
