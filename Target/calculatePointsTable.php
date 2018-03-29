@@ -151,7 +151,7 @@ function rerender()
 		<img src="../images/excel.png" id="button" height="50px" width="45ypx" />
 		<br/><br/>
 
-		<table id="Points" class="responstable" style="width:70% !important">
+		<table id="Points" class="responstable" style="width:90% !important">
 		<thead>
 			<tr>
 				<th style="width:20%;text-align:left;">AR</th>
