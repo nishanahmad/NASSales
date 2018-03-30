@@ -35,14 +35,14 @@ if(isset($_SESSION["user_name"]))
 <script type="text/javascript">
 function rerender()
 {
-var year = document.getElementById("jsYear").options[document.getElementById("jsYear").selectedIndex].value;
+	var year = document.getElementById("jsYear").options[document.getElementById("jsYear").selectedIndex].value;
 
-var month=document.getElementById("jsMonth").value;
+	var month=document.getElementById("jsMonth").value;
 
-var hrf = window.location.href;
-hrf = hrf.slice(0,hrf.indexOf("?"));
+	var hrf = window.location.href;
+	hrf = hrf.slice(0,hrf.indexOf("?"));
 
-window.location.href = hrf +"?year="+ year + "&month=" + month;
+	window.location.href = hrf +"?year="+ year + "&month=" + month;
 }
 </script>
 <head>
@@ -59,13 +59,13 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 	<br><br>
 	<font size="5px"><b><?php echo $year;?></b></font>
 	<br>
+
 	<select id="jsYear" name="jsYear" onchange="return rerender();">																				<?php
-	foreach($yearList as $year)
+	foreach($yearList as $yearIterator)
 	{																																				?>
-		<option  value="<?php echo $year;?>"> <?php echo $year;?> </option>																			<?php
+		<option  value="<?php echo $yearIterator;?>"> <?php echo $yearIterator;?> </option>															<?php 
 	}																																				?>
 	</select>
-	
 	<select id="jsMonth" name="jsMonth" onchange="return rerender();">																				<?php
 	for($i=1; $i<=12; $i++)
 	{																																				?>
@@ -83,7 +83,6 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 			<th style="width:10%;text-align:center;">TARGET</th>
 			<th style="width:10%;text-align:center;">RATE</th>
 			<th style="width:10%;text-align:center;">PAYMENT %</th> 
-			<th style="width:10%;text-align:center;">COMPANY TARGET</th> 
 		</tr>					<?php
 	while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
 	{
@@ -101,7 +100,6 @@ window.location.href = hrf +"?year="+ year + "&month=" + month;
 			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-target';?>" value="<?php echo $target; ?>"></td>	
 			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-rate';?>" value="<?php echo $rate; ?>"></td>		
 			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-pp';?>" value="<?php echo $pp; ?>"></td>		
-			<td style="text-align:center;"><input type="text" style="text-align:center;width:70px;border:0px;background-color: transparent;" name="<?php echo $arId.'-companyTarget';?>" value="<?php echo $company_target; ?>"></td>					
 		</tr>																												<?php
 	}						
 																									?>
