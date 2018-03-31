@@ -165,7 +165,7 @@ if(isset($_SESSION["user_name"]))
 		<br><br>																																				<?php
 	foreach($userNameMap as $userId =>$userName)
 	{
-		if($userId == $_SESSION['user_id'] || $_SESSION['role'] == 'admin' || $_SESSION['role'] == 'manager')												
+		if($userId == $_SESSION['user_id'] || $_SESSION['role'] == 'admin' || $_SESSION['role'] == 'manager' || $userId == 5)												
 		{																																						?>
 		<table class="responstable" style="width:65% !important;">
 			<thead>
