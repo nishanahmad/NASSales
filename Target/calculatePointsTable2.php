@@ -64,6 +64,12 @@ if(isset($_SESSION["user_name"]))
 			$pointMap[$arId]['points'] = 0;
 		}	
 	}	
+	
+	$currentRedemption = mysqli_query($con,"SELECT ar_id,SUM(points) FROM redemption WHERE '$year' = year(`date`) AND '$month' = month(`date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
+	foreach($currentRedemption as $redemption)
+	{
+		$redemptionMap[$redemption['ar_id']] = $redemption['SUM(points)'];
+	}
 ?>
 <html>
 <head>
@@ -151,6 +157,8 @@ function rerender()
 				<th style="width:10%;">SAP</th>
 				<th>Opng Pnts</th>
 				<th>Current Pnts</th>	
+				<th>Redeemed Pnts</th>	
+				<th>Balance</th>	
 			</tr>
 		</thead>	
 							
@@ -160,7 +168,10 @@ function rerender()
 				if(!isset($targetMap[$arId]))
 					$targetMap[$arId]['target'] = 0;						
 				if(!isset($pointMap[$arId]))	
-					$pointMap[$arId]['points'] = 0;																															?>
+					$pointMap[$arId]['points'] = 0;
+				if(!isset($redemptionMap[$arId]))	
+					$redemptionMap[$arId] = 0;																																	?>
+				
 				
 				<tr align="center">
 				<td style="text-align:left;"><?php echo $detailMap['name'];?></b></td>
@@ -169,6 +180,8 @@ function rerender()
 				<td><?php echo $detailMap['sap'];?></b></td>
 				<td><?php echo $prevMap[$arId]['prevPoints'] - $prevMap[$arId]['prevRedemption'];?></b></td>
 				<td><?php echo $pointMap[$arId]['points'];?></td>
+				<td><?php echo $redemptionMap[$arId];?></td>
+				<td><?php echo $prevMap[$arId]['prevPoints'] - $prevMap[$arId]['prevRedemption'] + $pointMap[$arId]['points'] - $redemptionMap[$arId];?></td>
 				</tr>																																							<?php
 			}																																									?>
 		</table>
@@ -183,10 +196,10 @@ else
 function getPrevPoints($arList,$year,$month)
 {
 	require '../connect.php';
-	$startYearQuery = mysqli_query($con,"SELECT MIN(year) FROM target") or die(mysqli_error($con));	
-	$startYear = (int)mysqli_fetch_array($startYearQuery,MYSQLI_ASSOC)['MIN(year)'];
-	$startMonthQuery = mysqli_query($con,"SELECT MIN(month) FROM target WHERE year = '$startYear' ") or die(mysqli_error($con));	
-	$startMonth = (int)mysqli_fetch_array($startMonthQuery,MYSQLI_ASSOC)['MIN(month)'];	
+	//$startYearQuery = mysqli_query($con,"SELECT MIN(year) FROM target") or die(mysqli_error($con));	
+	$startYear = 2018; //(int)mysqli_fetch_array($startYearQuery,MYSQLI_ASSOC)['MIN(year)'];
+	//$startMonthQuery = mysqli_query($con,"SELECT MIN(month) FROM target WHERE year = '$startYear' ") or die(mysqli_error($con));	
+	$startMonth = 1; //(int)mysqli_fetch_array($startMonthQuery,MYSQLI_ASSOC)['MIN(month)'];	
 
 	$dateString = '01-'.$month.'-'.$year;
 	$date = date("Y-m-d",strtotime($dateString));
