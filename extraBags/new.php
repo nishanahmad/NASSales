@@ -4,7 +4,7 @@ if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
     
-	$arObjects = mysqli_query($con,"SELECT id,sap_code,ar_name,shop_name FROM ar_details WHERE sap_code IS NOT NULL AND shop_name IS NOT NULL ORDER BY ar_name ASC");	
+	$arObjects = mysqli_query($con,"SELECT id,sap_code,ar_name,shop_name FROM ar_details WHERE isActive = 1 ORDER BY ar_name ASC");	
 	
 	// Populate maps for SAP CODE and AR NAME
 	foreach($arObjects as $ar)
