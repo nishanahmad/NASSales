@@ -7,18 +7,20 @@ if(isset($_SESSION["user_name"]))
 	require '../functions/targetFormula.php';
 
 	$mainArray = array();
-	if(isset($_GET['year']) && isset($_GET['month']))
+	if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['dateString']))
 	{
 		$year = (int)$_GET['year'];
-		$month = (int)$_GET['month'];		
+		$month = (int)$_GET['month'];
+		$dateString = $_GET['dateString'];
 	}	
 	else
 	{
 		$year = (int)date("Y");
 		$month = (int)date("m");
+		$dateString = 'FULL';
 	}
 	
-	$arObjects =  mysqli_query($con,"SELECT id,ar_name,mobile,shop_name,sap_code FROM ar_details WHERE  isActive = 1 ORDER BY ar_name ASC ") or die(mysqli_error($con));		 
+	$arObjects =  mysqli_query($con,"SELECT id,ar_name,mobile,shop_name,sap_code FROM ar_details WHERE isActive = 1 ORDER BY ar_name ASC ") or die(mysqli_error($con));		 
 	foreach($arObjects as $ar)
 	{
 		$arMap[$ar['id']]['name'] = $ar['ar_name'];
@@ -27,43 +29,79 @@ if(isset($_SESSION["user_name"]))
 		$arMap[$ar['id']]['sap'] = $ar['sap_code'];
 	}				
 	
-	$prevMap = getPrevPoints(array_keys($arMap),$year,$month);
+	$prevMap = getPrevPoints(array_keys($arMap),$year,$month,$dateString);
+	
 	//var_dump($prevMap);
 	
 	$arIds = implode("','",array_keys($arMap));
-	$targetObjects = mysqli_query($con,"SELECT ar_id, target, payment_perc,rate FROM target WHERE  month = '$month' AND Year='$year' AND target > 0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
-	foreach($targetObjects as $target)
+	
+	if($dateString == 'FULL')
 	{
-		$targetMap[$target['ar_id']]['target'] = $target['target'];
-		$targetMap[$target['ar_id']]['rate'] = $target['rate'];
-		$targetMap[$target['ar_id']]['payment_perc'] = $target['payment_perc'];
+		$string = cal_days_in_month(CAL_GREGORIAN,$month,$year).'-'.$month.'-'.$year;		
+		$date = date("Y-m-d",strtotime($string));	
+		
+		$targetObjects = mysqli_query($con,"SELECT ar_id, target, payment_perc,rate FROM target WHERE  month = '$month' AND Year='$year' AND target > 0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
+		foreach($targetObjects as $target)
+		{
+			$targetMap[$target['ar_id']]['target'] = $target['target'];
+			$targetMap[$target['ar_id']]['rate'] = $target['rate'];
+			$targetMap[$target['ar_id']]['payment_perc'] = $target['payment_perc'];
+		}
+		
+		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) AND '$month' = month(`entry_date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
+
+		foreach($sales as $sale)
+		{
+			$arId = $sale['ar_id'];
+			$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
+			if(isset($targetMap[$arId]))
+			{
+				$points = round($total * $targetMap[$arId]['rate'],0);
+				$actual_perc = round($total * 100 / $targetMap[$arId]['target'],0);
+				$point_perc = getPointPercentage($actual_perc,$year,$month);			
+				$achieved_points = round($points * $point_perc/100,0);
+				
+				if($total > 0)		
+					$payment_points = round($achieved_points * $targetMap[$arId]['payment_perc']/100,0);
+				else
+					$payment_points = -50;			
+
+				$pointMap[$arId]['points'] = $payment_points;			
+			}
+			else
+			{
+				$pointMap[$arId]['points'] = 0;
+			}	
+		}			
+	}
+	else
+	{
+		$dateArray = explode(" to ",$dateString);
+		$from = $dateArray[0];
+		$to = $dateArray[1];
+		$string = $to.'-'.$month.'-'.$year;		
+		$date = date("Y-m-d",strtotime($string));	
+		
+		$specialTargetObjects = mysqli_query($con,"SELECT ar_id, fromDate, toDate,special_target FROM special_target WHERE  toDate = '$to' AND fromDate = '$from' AND special_target >0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
+		foreach($specialTargetObjects as $specialTarget)
+		{
+			$arId = $specialTarget['ar_id'];
+			$start = $specialTarget['fromDate'];
+			$end = $specialTarget['toDate'];
+			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
+			foreach($sales as $sale)
+			{
+				$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
+				if($total >= ($specialTarget['special_target']*.9))
+					$pointMap[$arId]['points'] = $total;
+				else
+					$pointMap[$arId]['points'] = 0;			
+			}
+		}		
 	}
 	
-	$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) AND '$month' = month(`entry_date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
+	
 
-	foreach($sales as $sale)
-	{
-		$arId = $sale['ar_id'];
-		$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
-		if(isset($targetMap[$arId]))
-		{
-			$points = round($total * $targetMap[$arId]['rate'],0);
-			$actual_perc = round($total * 100 / $targetMap[$arId]['target'],0);
-			$point_perc = getPointPercentage($actual_perc,$year,$month);			
-			$achieved_points = round($points * $point_perc/100,0);
-			
-			if($total > 0)		
-				$payment_points = round($achieved_points * $targetMap[$arId]['payment_perc']/100,0);
-			else
-				$payment_points = -50;			
-
-			$pointMap[$arId]['points'] = $payment_points;			
-		}
-		else
-		{
-			$pointMap[$arId]['points'] = 0;
-		}	
-	}	
 	
 	$currentRedemption = mysqli_query($con,"SELECT ar_id,SUM(points) FROM redemption WHERE '$year' = year(`date`) AND '$month' = month(`date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
 	foreach($currentRedemption as $redemption)
@@ -108,7 +146,18 @@ function rerender()
 	hrf = hrf.slice(0,hrf.indexOf("?"));
 	$("#main").hide();
 	$("#loader").show();
-	window.location.href = hrf +"?year="+ year + "&month=" + month;
+	window.location.href = hrf +"?year="+ year + "&month=" + month + "&dateString=FULL";
+}
+
+function rerender2()
+{
+	var dateString = document.getElementById("jsDateString").options[document.getElementById("jsDateString").selectedIndex].value;
+
+	var hrf = window.location.href;
+	hrf = hrf.slice(0,hrf.indexOf("&dateString"));
+	$("#main").hide();
+	$("#loader").show();
+	window.location.href = hrf + "&dateString=" + dateString;
 }
 </script>
 
@@ -143,9 +192,21 @@ function rerender()
 ?>				<option value="<?php echo $yearObj['year'];?>"><?php echo $yearObj['year'];?></option>																			<?php	
 			}
 ?>		</select>
+			&nbsp;&nbsp;
+
+		<select id="jsDateString" name="jsDateString" class="textarea" onchange="return rerender2();">
+			<option value = "<?php echo $dateString;?>"><?php echo $dateString;?></option>																									<?php	
+			$dateList = mysqli_query($con, "SELECT from_date,to_date FROM special_target_date WHERE YEAR(from_date) = $year AND MONTH(from_date) = $month" ) or die(mysqli_error($con));	
+			foreach($dateList as $dateObj) 
+			{
+?>				<option value="<?php echo date('d', strtotime($dateObj['from_date'])).' to '.date('d', strtotime($dateObj['to_date']));?>"><?php echo date('d', strtotime($dateObj['from_date'])).' to '.date('d', strtotime($dateObj['to_date']));?></option>																			<?php	
+			}
+			if($dateString != 'FULL')?>
+				<option value = "FULL">FULL</option>																										
+		</select>
 		<br><br>
 		
-		<img src="../images/excel.png" id="button" height="50px" width="45ypx" />
+		<img src="../images/excel.png" id="button" height="50px" width="45px" />
 		<br/><br/>
 
 		<table id="Points" class="responstable" style="width:70% !important">
@@ -193,16 +254,26 @@ function rerender()
 else
 	header("../Location:index.php");
 
-function getPrevPoints($arList,$year,$month)
+function getPrevPoints($arList,$year,$month,$dateString)
 {
 	require '../connect.php';
-	//$startYearQuery = mysqli_query($con,"SELECT MIN(year) FROM target") or die(mysqli_error($con));	
-	$startYear = 2018; //(int)mysqli_fetch_array($startYearQuery,MYSQLI_ASSOC)['MIN(year)'];
-	//$startMonthQuery = mysqli_query($con,"SELECT MIN(month) FROM target WHERE year = '$startYear' ") or die(mysqli_error($con));	
-	$startMonth = 1; //(int)mysqli_fetch_array($startMonthQuery,MYSQLI_ASSOC)['MIN(month)'];	
+	
+	$startYear = 2018; 
+	$startMonth = 1;
 
-	$dateString = '01-'.$month.'-'.$year;
-	$date = date("Y-m-d",strtotime($dateString));
+	if($dateString == 'FULL')
+	{
+		$string = cal_days_in_month(CAL_GREGORIAN,$month,$year).'-'.$month.'-'.$year;		
+	}
+	else
+	{
+		$dateArray = explode(" to ",$dateString);
+		$from = $dateArray[0];
+		$to = $dateArray[1];
+		$string = $to.'-'.$month.'-'.$year;		
+	}
+	
+	$date = date("Y-m-d",strtotime($string));
 	
 	foreach($arList as $arId)
 	{
@@ -260,6 +331,24 @@ function getPrevPoints($arList,$year,$month)
 		}		
 	}	
 
+	$specialTargetObjects = mysqli_query($con,"SELECT ar_id, fromDate, toDate,special_target FROM special_target WHERE  toDate <= '$date' AND fromDate >= '2018-01-01' AND special_target >0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
+	foreach($specialTargetObjects as $specialTarget)
+	{
+		$arId = $specialTarget['ar_id'];
+		$start = $specialTarget['fromDate'];
+		$end = $specialTarget['toDate'];
+		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
+		foreach($sales as $sale)
+		{
+			//var_dump($specialTarget);
+			$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
+			if($total >= ($specialTarget['special_target']*.9))
+			{
+				$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
+			}
+		}
+	}
+	
 	$redemptionList = mysqli_query($con,"SELECT * FROM redemption WHERE  date < '$date' AND ar_id IN('$arIds')") or die(mysqli_error($con));		 	
 	foreach($redemptionList as $redemption)
 	{
