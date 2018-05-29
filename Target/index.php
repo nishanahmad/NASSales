@@ -42,7 +42,7 @@ a{
 	<a href="calculatePointsTable.php?month=<?php echo $month;?>&year=<?php echo $year;?>" class="btn lg ghost">VIEW MONTHLY POINTS</a>
 	<br><br><br>
 	
-	<a href="calculatePointsTable2.php?month=<?php echo $month;?>&year=<?php echo $year;?>" class="btn lg ghost">VIEW ACCUMULATED POINTS</a>
+	<a href="calculatePointsTable2.php?month=<?php echo $month;?>&year=<?php echo $year;?>&dateString=FULL" class="btn lg ghost">VIEW ACCUMULATED POINTS</a>
 	<br><br><br>	
 	
 	<a href="companyTarget.php?month=<?php echo $month;?>&year=<?php echo $year;?>" class="btn lg ghost">COMPANY TARGET</a>
