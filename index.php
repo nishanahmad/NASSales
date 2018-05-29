@@ -50,13 +50,8 @@ a{
 	<a href="reports/" class="btn lg ghost">REPORTS</a>
     <br><br><br>
 
-																						<?php			
-	if($_SESSION["role"] == 'admin' || $_SESSION["user_id"] == 1)
-	{																					?>	
-		<a href="extraBags/" class="btn lg ghost">EXTRA BAGS</a>
-		<br><br><br>																		<?php	
-	}																					?>		
-
+	<a href="extraBags/" class="btn lg ghost">EXTRA BAGS</a>
+	<br><br><br>
 		
 	<a href="Salesforce/" class="btn lg ghost">SALESFORCE</a>
     <br><br><br>	
