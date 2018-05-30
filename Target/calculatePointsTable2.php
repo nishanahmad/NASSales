@@ -91,11 +91,15 @@ if(isset($_SESSION["user_name"]))
 			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
 			foreach($sales as $sale)
 			{
-				$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
-				if($total >= ($specialTarget['special_target']*.9))
-					$pointMap[$arId]['points'] = $total;
-				else
-					$pointMap[$arId]['points'] = 0;			
+				$extraBags = mysqli_query($con,"SELECT ar_id,qty FROM extra_bags WHERE date >= '$start' AND date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
+				foreach($extraBags as $extraBag)
+				{				
+					$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'] + $extraBag['qty'];
+					if($total >= ($specialTarget['special_target']*.9))
+						$pointMap[$arId]['points'] = $total;
+					else
+						$pointMap[$arId]['points'] = 0;			
+				}
 			}
 		}		
 	}
@@ -340,11 +344,14 @@ function getPrevPoints($arList,$year,$month,$dateString)
 		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
 		foreach($sales as $sale)
 		{
-			//var_dump($specialTarget);
-			$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
-			if($total >= ($specialTarget['special_target']*.9))
+			$extraBags = mysqli_query($con,"SELECT ar_id,qty FROM extra_bags WHERE date >= '$start' AND date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
+			foreach($extraBags as $extraBag)
 			{
-				$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
+				$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'] + $extraBag['qty'];
+				if($total >= ($specialTarget['special_target']*.9))
+				{
+					$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
+				}				
 			}
 		}
 	}

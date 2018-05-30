@@ -28,7 +28,7 @@ if(isset($_SESSION["user_name"]))
 
 <html>
 <head>
-<title>COMPANY SALE</title>
+<title>EXTRA BAGS</title>
 <script>
 var arNameList = '<?php echo $arNameArray;?>';
 var arName_array = JSON.parse(arNameList);
