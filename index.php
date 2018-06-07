@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_SESSION["user_name"]))
+if(isset($_SESSION["user_name"]) && $_SESSION["role"] != 'driver')
 {																						?>
 <html>
 <style type="text/css">
@@ -55,12 +55,17 @@ a{
 		
 	<a href="Salesforce/" class="btn lg ghost">SALESFORCE</a>
     <br><br><br>	
+	
+	<a href="Sheet/" class="btn lg ghost">SHEET DELIVERY</a>
+    <br><br><br>		
 
 	</div>
 </body>
 </html>
 <?php
 }
+else if(isset($_SESSION["user_name"]) && $_SESSION["role"] == 'driver')
+	header("Location:Sheet/index.php");
 else
 	header("Location:loginPage.php");
 ?>
