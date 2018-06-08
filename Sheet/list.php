@@ -12,7 +12,8 @@ Sheets
 		<div class="row">
 		  <div class="column" style="background-color:#ddd;">
 			<p><?php echo $sheet['area'];?></p>		  
-			<p><?php echo $sheet['name'] . ', ' .$sheet['phone'];?></p>
+			<p><?php echo $sheet['name'] . ', ' .$sheet['phone'];?>
+				<a href="close.php?id=<?php echo $sheet['id'];?>" style="float:right;margin-right:100px;">Close</a></p>
 			<p><?php echo 'Qty:'.$sheet['qty'];?></p>
 			<p><?php echo date("d-m-Y",strtotime($sheet['date']));?></p>
 		  </div>
