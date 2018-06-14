@@ -13,7 +13,7 @@ Sheets
 		  <div class="column" style="background-color:#ddd;">
 			<p><?php echo $sheet['area'];?></p>		  
 			<p><?php echo $sheet['name'] . ', ' .$sheet['phone'];?>
-				<a href="close.php?id=<?php echo $sheet['id'];?>" style="float:right;margin-right:100px;"><img src="../images/delete.png" height="20px" width="20px"/></a></p>
+				<a href="close.php?id=<?php echo $sheet['id'];?>" style="float:right;margin-right:100px;"><img src="../images/delete.png" height="40px" width="40px"/></a></p>
 			<p><?php echo 'Qty:'.$sheet['qty'];?></p>
 			<p><?php echo date("d-m-Y",strtotime($sheet['date']));?></p>
 		  </div>
