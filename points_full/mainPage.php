@@ -5,7 +5,10 @@ if(isset($_SESSION["user_name"]))
 	require '../connect.php';
 	require '../functions/monthMap.php';
 	require '../functions/targetFormula.php';
-
+	require 'getTargetMap.php';
+	require 'getSaleMap.php';
+	require 'getSpecialTargetMap.php';	
+	
 	$mainArray = array();
 	if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['dateString']))
 	{
@@ -36,10 +39,7 @@ if(isset($_SESSION["user_name"]))
 	$arIds = implode("','",array_keys($arMap));
 	
 	if($dateString == 'FULL')
-	{
-		$string = cal_days_in_month(CAL_GREGORIAN,$month,$year).'-'.$month.'-'.$year;		
-		$date = date("Y-m-d",strtotime($string));	
-		
+	{	
 		$targetObjects = mysqli_query($con,"SELECT ar_id, target, payment_perc,rate FROM target WHERE  month = '$month' AND Year='$year' AND target > 0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
 		foreach($targetObjects as $target)
 		{
@@ -49,7 +49,6 @@ if(isset($_SESSION["user_name"]))
 		}
 		
 		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) AND '$month' = month(`entry_date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
-
 		foreach($sales as $sale)
 		{
 			$arId = $sale['ar_id'];
@@ -65,7 +64,6 @@ if(isset($_SESSION["user_name"]))
 					$payment_points = round($achieved_points * $targetMap[$arId]['payment_perc']/100,0);
 				else
 					$payment_points = -50;			
-
 				$pointMap[$arId]['points'] = $payment_points;			
 			}
 			else
@@ -79,10 +77,13 @@ if(isset($_SESSION["user_name"]))
 		$dateArray = explode(" to ",$dateString);
 		$from = $dateArray[0];
 		$to = $dateArray[1];
-		$string = $to.'-'.$month.'-'.$year;		
-		$date = date("Y-m-d",strtotime($string));	
+		$toString = $to.'-'.$month.'-'.$year;		
+		$toDate = date("Y-m-d",strtotime($toString));	
 		
-		$specialTargetObjects = mysqli_query($con,"SELECT ar_id, fromDate, toDate,special_target FROM special_target WHERE  toDate = '$to' AND fromDate = '$from' AND special_target >0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
+		$fromString = $from.'-'.$month.'-'.$year;		
+		$fromDate = date("Y-m-d",strtotime($fromString));			
+		
+		$specialTargetObjects = mysqli_query($con,"SELECT ar_id, fromDate, toDate,special_target FROM special_target WHERE  toDate = '$toDate' AND fromDate = '$fromDate' AND special_target >0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
 		foreach($specialTargetObjects as $specialTarget)
 		{
 			$arId = $specialTarget['ar_id'];
@@ -91,21 +92,18 @@ if(isset($_SESSION["user_name"]))
 			$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
 			foreach($sales as $sale)
 			{
+				$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
 				$extraBags = mysqli_query($con,"SELECT ar_id,qty FROM extra_bags WHERE date >= '$start' AND date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
 				foreach($extraBags as $extraBag)
-				{				
-					$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'] + $extraBag['qty'];
-					if($total >= ($specialTarget['special_target']*.9))
-						$pointMap[$arId]['points'] = $total;
-					else
-						$pointMap[$arId]['points'] = 0;			
-				}
+					$total = $total + $extraBag['qty'];
+
+				if($total >= ($specialTarget['special_target']*.9))
+					$pointMap[$arId]['points'] = $total;
+				else
+					$pointMap[$arId]['points'] = 0;			
 			}
 		}		
 	}
-	
-	
-
 	
 	$currentRedemption = mysqli_query($con,"SELECT ar_id,SUM(points) FROM redemption WHERE '$year' = year(`date`) AND '$month' = month(`date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
 	foreach($currentRedemption as $redemption)
@@ -126,7 +124,6 @@ if(isset($_SESSION["user_name"]))
 <script type="text/javascript" language="javascript">
 $(document).ready(function() {
 	$("#loader").hide();
-
  	$("#button").click(function(){
 		$("table").tableExport({
 				formats: ["xls"],    // (String[]), filetypes for the export
@@ -134,29 +131,22 @@ $(document).ready(function() {
 				ignoreCSS: ".ignore"   // (selector, selector[]), selector(s) to exclude from the exported file
 		});
 	});		
-
 	var $table = $('.responstable');
 	$table.floatThead();				
 } );
-
-
 function rerender()
 {
 	var year = document.getElementById("jsYear").options[document.getElementById("jsYear").selectedIndex].value;
-
 	var month=document.getElementById("jsMonth").value;
-
 	var hrf = window.location.href;
 	hrf = hrf.slice(0,hrf.indexOf("?"));
 	$("#main").hide();
 	$("#loader").show();
 	window.location.href = hrf +"?year="+ year + "&month=" + month + "&dateString=FULL";
 }
-
 function rerender2()
 {
 	var dateString = document.getElementById("jsDateString").options[document.getElementById("jsDateString").selectedIndex].value;
-
 	var hrf = window.location.href;
 	hrf = hrf.slice(0,hrf.indexOf("&dateString"));
 	$("#main").hide();
@@ -258,26 +248,27 @@ function rerender2()
 else
 	header("../Location:index.php");
 
-function getPrevPoints($arList,$year,$month,$dateString)
+
+function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 {
 	require '../connect.php';
 	
 	$startYear = 2018; 
 	$startMonth = 1;
-
+	
 	if($dateString == 'FULL')
 	{
-		$string = cal_days_in_month(CAL_GREGORIAN,$month,$year).'-'.$month.'-'.$year;		
+		$string = cal_days_in_month(CAL_GREGORIAN,$endMonth,$endYear).'-'.$endMonth.'-'.$endYear;		
 	}
 	else
 	{
 		$dateArray = explode(" to ",$dateString);
 		$from = $dateArray[0];
 		$to = $dateArray[1];
-		$string = $to.'-'.$month.'-'.$year;		
+		$string = $to.'-'.$endMonth.'-'.$endYear;		
 	}
 	
-	$date = date("Y-m-d",strtotime($string));
+	$endDate = date("Y-m-d",strtotime($string));
 	
 	foreach($arList as $arId)
 	{
@@ -287,80 +278,74 @@ function getPrevPoints($arList,$year,$month,$dateString)
 	
 	$arIds = implode("','",array_keys($arMap));	
 	
-	if($month > 1)
-		$month = $month -1;
-	else
-	{
-		$year = $year - 1;
-		$month = 1;
-	}
-	while($year > $startYear || ($year == $startYear && $month >= $startMonth))
-	{
-		$targetObjects = mysqli_query($con,"SELECT ar_id, target, payment_perc,rate FROM target WHERE  month = '$month' AND Year='$year' AND target >0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
-		foreach($targetObjects as $target)
-		{
-			$targetMap[$target['ar_id']]['target'] = $target['target'];
-			$targetMap[$target['ar_id']]['rate'] = $target['rate'];
-			$targetMap[$target['ar_id']]['payment_perc'] = $target['payment_perc'];
-		}
-		
-		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE '$year' = year(`entry_date`) AND '$month' = month(`entry_date`) AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
+	
+	//call targetMap and saleMap from helper functions 
+	
+	$targetMap = getTargetMap($arIds,$startYear);		// arId => year => month => target
+	$saleMap = getSaleMap($arIds,$startYear,$endYear);	    // arId => year => month = sale
 
-		foreach($sales as $sale)
-		{
-			$arId = $sale['ar_id'];
-			$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
-			if(isset($targetMap[$arId]))
-			{
-				$points = round($total * $targetMap[$arId]['rate'],0);
-				$actual_perc = round($total * 100 / $targetMap[$arId]['target'],0);
-				$point_perc = getPointPercentage($actual_perc,$year,$month);			
-				$achieved_points = round($points * $point_perc/100,0);
-				
-				if($total > 0)		
-					$payment_points = round($achieved_points * $targetMap[$arId]['payment_perc']/100,0);
-				else if(isset($targetMap[$arId]))
-					$payment_points = -50;			
-				
-				$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $payment_points;			
-			}
-		}			
-		
-		if($month > 1)
-			$month = $month -1;
-		else
-		{
-			$year = $year - 1;
-			$month = 12;
-		}		
-	}	
-
-	$specialTargetObjects = mysqli_query($con,"SELECT ar_id, fromDate, toDate,special_target FROM special_target WHERE  toDate <= '$date' AND fromDate >= '2018-01-01' AND special_target >0 AND ar_id IN('$arIds')") or die(mysqli_error($con));		 
-	foreach($specialTargetObjects as $specialTarget)
+	// Add points based on monthly targets
+	foreach($targetMap as $arId => $yearMonthArray)
 	{
-		$arId = $specialTarget['ar_id'];
-		$start = $specialTarget['fromDate'];
-		$end = $specialTarget['toDate'];
-		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
-		foreach($sales as $sale)
+		foreach($yearMonthArray as $year => $monthArray)
 		{
-			$extraBags = mysqli_query($con,"SELECT ar_id,qty FROM extra_bags WHERE date >= '$start' AND date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
-			foreach($extraBags as $extraBag)
+			if($year <= $endYear)
 			{
-				$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'] + $extraBag['qty'];
-				if($total >= ($specialTarget['special_target']*.9))
+				foreach($monthArray as $month => $detailArray)
 				{
-					$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
+					if($month < $endMonth && $year == $endYear)
+					{
+						if(isset($saleMap[$arId][$year][$month]))
+							$sale = $saleMap[$arId][$year][$month];
+						else
+							$sale = 0;
+
+						$points = round($sale * $detailArray['rate'],0);
+						$actual_perc = round($sale * 100 / $detailArray['target'],0);
+						$point_perc = getPointPercentage($actual_perc,$year,$month);			
+						$achieved_points = round($points * $point_perc/100,0);
+						
+						if($sale > 0)		
+							$payment_points = round($achieved_points * $detailArray['payment_perc']/100,0);
+						else if(isset($detailArray))
+							$payment_points = -50;			
+						
+						$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $payment_points;												
+					}
 				}				
 			}
 		}
 	}
 	
-	$redemptionList = mysqli_query($con,"SELECT * FROM redemption WHERE  date < '$date' AND ar_id IN('$arIds')") or die(mysqli_error($con));		 	
+	// Add points based on special targets
+	$specialTargetMap = getSpecialTargetMap($arIds,$endDate);		// arId => fromDate => special_target
+	//var_dump($specialTargetMap);
+	
+	$stDates = mysqli_query($con,"SELECT from_date,to_date FROM special_target_date WHERE to_date <= '$endDate' ") or die(mysqli_error($con));	
+	foreach($stDates as $stDate)
+	{
+		$start = $stDate['from_date'];
+		$end = $stDate['to_date'];
+		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
+		foreach($sales as $sale)
+		{
+			$arId = $sale['ar_id'];
+			$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
+			$extraBags = mysqli_query($con,"SELECT ar_id,qty FROM extra_bags WHERE date >= '$start' AND date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
+			foreach($extraBags as $extraBag)
+				$total = $total + $extraBag['qty'];
+
+			if($total >= ($specialTargetMap[$arId][$start]*.9))
+				$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
+		}			
+	}
+	
+	$redemptionList = mysqli_query($con,"SELECT * FROM redemption WHERE  date <= '$endDate' AND ar_id IN('$arIds')") or die(mysqli_error($con));		 	
 	foreach($redemptionList as $redemption)
 	{
 		$arMap[$redemption['ar_id']]['prevRedemption'] = $arMap[$redemption['ar_id']]['prevRedemption'] + $redemption['points'];			
 	}
+
 	return $arMap;
 }
 ?>
