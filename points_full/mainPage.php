@@ -63,7 +63,7 @@ if(isset($_SESSION["user_name"]))
 				if($total > 0)		
 					$payment_points = round($achieved_points * $targetMap[$arId]['payment_perc']/100,0);
 				else
-					$payment_points = -50;			
+					$payment_points = 0;			
 				$pointMap[$arId]['points'] = $payment_points;			
 			}
 			else
@@ -308,7 +308,7 @@ function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 						if($sale > 0)		
 							$payment_points = round($achieved_points * $detailArray['payment_perc']/100,0);
 						else if(isset($detailArray))
-							$payment_points = -50;			
+							$payment_points = 0;			
 						
 						$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $payment_points;												
 					}

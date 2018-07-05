@@ -63,7 +63,7 @@ if(isset($_SESSION["user_name"]))
 			if($total > 0)		
 				$payment_points = round($achieved_points * $targetMap[$arId]['payment_perc']/100,0);
 			else
-				$payment_points = -50;			
+				$payment_points = 0;			
 
 			$mainArray[$arId]['actual_sale'] = $total;
 			$mainArray[$arId]['points'] = $points;
