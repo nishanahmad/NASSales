@@ -170,29 +170,36 @@ function rerender()
 			</tr>
 		</thead>	
 							
-																																				<?php
-			foreach($mainArray as $arId => $subArray)
+																																						<?php
+			foreach($targetMap as $arId => $targetArray)
 			{		
-				if(isset($targetMap[$arId]))
+				$target = $targetArray['target'];
+				$rate = $targetArray['rate'];
+				$payment_perc = $targetArray['payment_perc'];
+				if(!isset($mainArray[$arId]))
 				{
-					$target = $targetMap[$arId]['target'];
-					$rate = $targetMap[$arId]['rate'];
-					$payment_perc = $targetMap[$arId]['payment_perc'];
-				}																																?>
+					$mainArray[$arId]['actual_sale'] = null;
+					$mainArray[$arId]['points'] = null;
+					$mainArray[$arId]['actual_perc'] = null;
+					$mainArray[$arId]['point_perc'] = null;
+					$mainArray[$arId]['achieved_points'] = null;
+					$mainArray[$arId]['payment_points'] = null;
+				}																																	?>
+				
 				<tr align="center">
 				<td style="text-align:left;"><?php echo $arMap[$arId]['name'];?></b></td>
 				<td><?php echo $arMap[$arId]['mobile'];?></b></td>
 				<td style="text-align:left;"><?php echo $arMap[$arId]['shop'];?></b></td>
 				<td><?php echo $arMap[$arId]['sap'];?></b></td>
 				<td><?php echo $target;?></td>
-				<td><?php echo $subArray['actual_sale'];?></td>
+				<td><?php echo $mainArray[$arId]['actual_sale'];?></td>
 				<td><?php echo $rate;?></td>
-				<td><?php echo $subArray['points'];?></td>
-				<td><?php echo $subArray['actual_perc'].'%';?></td>
-				<td><?php echo $subArray['point_perc'].'%';?></td>
+				<td><?php echo $mainArray[$arId]['points'];?></td>
+				<td><?php echo $mainArray[$arId]['actual_perc'].'%';?></td>
+				<td><?php echo $mainArray[$arId]['point_perc'].'%';?></td>
 				<td><?php echo $payment_perc;?></td>
-				<td><?php echo $subArray['achieved_points'];?></td>
-				<td><?php echo '<b>'.$subArray['payment_points'].'</b>';?></td>
+				<td><?php echo $mainArray[$arId]['achieved_points'];?></td>
+				<td><?php echo '<b>'.$mainArray[$arId]['payment_points'].'</b>';?></td>
 				</tr>																															<?php
 			}																																	?>
 		</table>
