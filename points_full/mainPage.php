@@ -93,11 +93,12 @@ if(isset($_SESSION["user_name"]))
 			foreach($sales as $sale)
 			{
 				$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
+				$totalWithExtra = $total;
 				$extraBags = mysqli_query($con,"SELECT ar_id,qty FROM extra_bags WHERE date >= '$start' AND date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
 				foreach($extraBags as $extraBag)
-					$total = $total + $extraBag['qty'];
+					$totalWithExtra = $totalWithExtra + $extraBag['qty'];
 
-				if($total >= ($specialTarget['special_target']*.9))
+				if($totalWithExtra >= ($specialTarget['special_target']*.9))
 					$pointMap[$arId]['points'] = $total;
 				else
 					$pointMap[$arId]['points'] = 0;			
@@ -331,11 +332,12 @@ function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 		{
 			$arId = $sale['ar_id'];
 			$total = $sale['SUM(srp)'] + $sale['SUM(srh)'] + $sale['SUM(f2r)'] - $sale['SUM(return_bag)'];
+			$totalWithExtra = $total;
 			$extraBags = mysqli_query($con,"SELECT ar_id,qty FROM extra_bags WHERE date >= '$start' AND date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
 			foreach($extraBags as $extraBag)
-				$total = $total + $extraBag['qty'];
+				$totalWithExtra = $totalWithExtra + $extraBag['qty'];
 
-			if($total >= ($specialTargetMap[$arId][$start]*.9))
+			if($totalWithExtra >= ($specialTargetMap[$arId][$start]*.9))
 				$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
 		}			
 	}
