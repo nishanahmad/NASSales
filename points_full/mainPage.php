@@ -98,7 +98,7 @@ if(isset($_SESSION["user_name"]))
 				foreach($extraBags as $extraBag)
 					$totalWithExtra = $totalWithExtra + $extraBag['qty'];
 
-				if($totalWithExtra >= ($specialTarget['special_target']*.9))
+				if($totalWithExtra >= ($specialTarget['special_target']))
 					$pointMap[$arId]['points'] = $total;
 				else
 					$pointMap[$arId]['points'] = 0;			
@@ -337,7 +337,7 @@ function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 			foreach($extraBags as $extraBag)
 				$totalWithExtra = $totalWithExtra + $extraBag['qty'];
 
-			if($totalWithExtra >= ($specialTargetMap[$arId][$start]*.9))
+			if($totalWithExtra >= ($specialTargetMap[$arId][$start]))
 				$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
 		}			
 	}
