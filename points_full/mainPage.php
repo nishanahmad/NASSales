@@ -268,8 +268,7 @@ function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 		$to = $dateArray[1];
 		$string = $to.'-'.$endMonth.'-'.$endYear;		
 	}
-	
-	$endDate = date("Y-m-d",strtotime($string));
+	$endDate = date("Y-m-d",strtotime($string));	
 	
 	foreach($arList as $arId)
 	{
@@ -321,7 +320,11 @@ function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 	// Add points based on special targets
 	$specialTargetMap = getSpecialTargetMap($arIds,$endDate);		// arId => fromDate => special_target
 	
-	$stDates = mysqli_query($con,"SELECT from_date,to_date FROM special_target_date WHERE to_date < '$endDate' AND from_date > '2018-01-01' ") or die(mysqli_error($con));	
+	if($dateString != 'FULL')
+		$stDates = mysqli_query($con,"SELECT from_date,to_date FROM special_target_date WHERE to_date < '$endDate' AND from_date > '2018-01-01' ") or die(mysqli_error($con));	
+	else
+		$stDates = mysqli_query($con,"SELECT from_date,to_date FROM special_target_date WHERE to_date <= '$endDate' AND from_date > '2018-01-01' ") or die(mysqli_error($con));	
+	
 	foreach($stDates as $stDate)
 	{
 		$start = $stDate['from_date'];
