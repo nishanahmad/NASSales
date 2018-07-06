@@ -320,14 +320,13 @@ function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 	
 	// Add points based on special targets
 	$specialTargetMap = getSpecialTargetMap($arIds,$endDate);		// arId => fromDate => special_target
-	//var_dump($specialTargetMap);
 	
 	$stDates = mysqli_query($con,"SELECT from_date,to_date FROM special_target_date WHERE to_date < '$endDate' AND from_date > '2018-01-01' ") or die(mysqli_error($con));	
 	foreach($stDates as $stDate)
 	{
 		$start = $stDate['from_date'];
 		$end = $stDate['to_date'];
-		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id = '$arId' GROUP BY ar_id") or die(mysqli_error($con));	
+		$sales = mysqli_query($con,"SELECT ar_id,SUM(srp),SUM(srh),SUM(f2r),SUM(return_bag) FROM nas_sale WHERE entry_date >= '$start' AND entry_date <= '$end' AND ar_id IN ('$arIds') GROUP BY ar_id") or die(mysqli_error($con));	
 		foreach($sales as $sale)
 		{
 			$arId = $sale['ar_id'];
@@ -337,8 +336,12 @@ function getPrevPoints($arList,$endYear,$endMonth,$dateString)
 			foreach($extraBags as $extraBag)
 				$totalWithExtra = $totalWithExtra + $extraBag['qty'];
 
-			if($totalWithExtra >= ($specialTargetMap[$arId][$start]))
-				$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;			
+			
+			if(isset($specialTargetMap[$arId][$start]))			
+			{
+				if($totalWithExtra >= ($specialTargetMap[$arId][$start]))
+					$arMap[$arId]['prevPoints'] = $arMap[$arId]['prevPoints'] + $total;							
+			}
 		}			
 	}
 	
