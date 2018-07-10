@@ -3,8 +3,6 @@ session_start();
 if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
-	require '../functions/monthMap.php';
-
 	$today = date("Y-m-d");
 	
 	if(isset($_GET['fromDate']) && isset($_GET['toDate']))
@@ -19,23 +17,6 @@ if(isset($_SESSION["user_name"]))
 		$fromDate = $dates['from_date'];
 		$toDate = $dates['to_date'];		
 	}	
-	$month = date("m",strtotime($fromDate));
-	$year = date("Y",strtotime($fromDate));
-	
-	$checkDate = mysqli_query($con,"SELECT * FROM special_target_date WHERE  from_date = '$fromDate' AND to_date ='$toDate' ") or die(mysqli_error($con));		 
-	if(mysqli_num_rows($checkDate) <= 0)
-	{
-		$queryDates = mysqli_query($con,"SELECT * FROM special_target_date WHERE Year(from_date) = '$year' AND MONTH(from_date) ='$month' ORDER BY from_date ASC LIMIT 1") or die(mysqli_error($con));		 
-		foreach($queryDates as $stDate)
-			$dateString = date("d",strtotime($stDate['from_date'])) .' to '.date("d",strtotime($stDate['to_date']));
-		
-		$fromDate = $stDate['from_date'];
-		$toDate = $stDate['to_date'];
-			
-	}	
-	else	
-		$dateString = date("d",strtotime($fromDate)) .' to '.date("d",strtotime($toDate));	
-	
 	
 	$zeroTargetList = mysqli_query($con,"SELECT ar_id FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND special_target = 0") or die(mysqli_error($con));		 
 	foreach($zeroTargetList as $zeroTarget)
@@ -53,7 +34,6 @@ if(isset($_SESSION["user_name"]))
 		$arShopMap[$arObject['id']] = $arObject['shop_name'];
 		$arExtraMap[$arObject['id']] = 0;
 	}
-
 	$extraBagsList = mysqli_query($con,"SELECT ar_id,SUM(qty) FROM extra_bags WHERE date >= '$fromDate' AND date <= '$toDate' GROUP BY ar_id") or die(mysqli_error($con));											
 	foreach($extraBagsList as $extraBag)
 	{
@@ -69,7 +49,6 @@ if(isset($_SESSION["user_name"]))
 	}
 	
 	$ar_detail = mysqli_query($con,"SELECT ar_id, special_target FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND ar_id IN ('$array')") or die(mysqli_error($con));		 
-
 	
 	if(isset($_GET['removeToday']) && $_GET['removeToday'] == 'true')
 	{
@@ -85,7 +64,6 @@ if(isset($_SESSION["user_name"]))
 											AND ar_id IN ('$array')
 											GROUP BY ar_id")
 											or die(mysqli_error($con));								
-
 	foreach($sales as $sale)
 	{
 		$lpp = $sale['SUM(srp)'];
@@ -112,7 +90,6 @@ if(isset($_SESSION["user_name"]))
 	<script type="text/javascript" language="javascript" src="../js/jquery.floatThead.min.js"></script>
 	<script type="text/javascript" language="javascript" >
 	$(document).ready(function() {
-
 		$("#loader").hide();	
 		
 		var checkbox = getUrlParameter('removeToday');
@@ -125,19 +102,9 @@ if(isset($_SESSION["user_name"]))
 		$table.floatThead();		
 				
 	} );
-
 	function refresh()
 	{
-		var year = document.getElementById("jsYear").value;
-		var month = document.getElementById("jsMonth").value;
-		var month = document.getElementById("jsMonth").value;
-		var dateString = document.getElementById("jsDateString").value;
-		
-		var start = dateString.split(" to ")[0];
-		var end = dateString.split(" to ")[1];
-		
-		var range = 'fromDate=' + year + '-' + month + '-' + start + '&toDate=' + + year + '-' + month + '-' + end;
-		
+		var range = document.getElementById("range").value;
 		var removeToday = $('#removeToday').is(':checked');
 		
 		var hrf = window.location.href;
@@ -148,16 +115,13 @@ if(isset($_SESSION["user_name"]))
 	
 		window.location.href = hrf +"?"+ range + "&removeToday=" + removeToday;
 	}
-
 	var getUrlParameter = function getUrlParameter(sParam) {
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
 			sParameterName,
 			i;
-
 		for (i = 0; i < sURLVariables.length; i++) {
 			sParameterName = sURLVariables[i].split('=');
-
 			if (sParameterName[0] === sParam) {
 				return sParameterName[1] === undefined ? true : sParameterName[1];
 			}
@@ -195,43 +159,23 @@ if(isset($_SESSION["user_name"]))
 			 <option value="achievement_area.php?">Area Wise</option>   								
 		</select>		
 		<br><br>
-
-		<select id="jsYear" name="jsYear" class="textarea" onchange="return refresh();">
-			<option value = "<?php echo $year;?>"><?php echo $year;?></option>																									<?php	
-			$yearList = mysqli_query($con, "SELECT DISTINCT year FROM target  WHERE year <> $year ORDER BY year DESC") or die(mysqli_error($con));	
-			foreach($yearList as $yearObj) 
+		<select name="range" id="range" onchange="refresh();">
+			<?php						
+			$queryDates = "SELECT from_date,to_date FROM special_target_date ORDER BY to_date ASC";
+			$dates = mysqli_query($con,$queryDates);
+			while ( $row=mysqli_fetch_assoc($dates)) 
 			{
-?>				<option value="<?php echo $yearObj['year'];?>"><?php echo $yearObj['year'];?></option>																			<?php	
+				$value = date('d-M-Y',strtotime($row['from_date'])).'&emsp;TO&emsp;'.date('d-M-Y',strtotime($row['to_date']));									
+				$urlValue = "fromDate=".$row['from_date']."&toDate=".$row['to_date']."";									?>
+			 <option <?php if($row['from_date'] == $fromDate) echo 'selected';?> value='<?php echo $urlValue;?>'><?php echo $value;?></option>   								<?php
 			}
-?>		</select>
-
-		&nbsp;&nbsp;
-
-		<select id="jsMonth" name="jsMonth" class="textarea" onchange="return refresh();">	
-			<option value = "<?php echo $month;?>"><?php echo getMonth($month);?></option>																						<?php	
-			$monthList = mysqli_query($con, "SELECT DISTINCT month FROM target WHERE month <> $month ORDER BY month ASC" ) or die(mysqli_error($con));	
-			foreach($monthList as $monthObj) 
-			{	
-	?>			<option value="<?php echo $monthObj['month'];?>"><?php echo getMonth($monthObj['month']);?></option>															<?php	
-			}
-	?>	</select>					
-
-		&nbsp;&nbsp;
-
-		<select id="jsDateString" name="jsDateString" class="textarea" onchange="return refresh();">
-			<option value = "<?php echo $dateString;?>"><?php echo $dateString;?></option>																									<?php	
-			$dateList = mysqli_query($con, "SELECT from_date,to_date FROM special_target_date WHERE YEAR(from_date) = $year AND MONTH(from_date) = $month" ) or die(mysqli_error($con));	
-			foreach($dateList as $dateObj) 
-			{
-?>				<option value="<?php echo date('d', strtotime($dateObj['from_date'])).' to '.date('d', strtotime($dateObj['to_date']));?>"><?php echo date('d', strtotime($dateObj['from_date'])).' to '.date('d', strtotime($dateObj['to_date']));?></option>																			<?php	
-			}																																																																										?>																										
+			?>
 		</select>
 		&emsp;&emsp;&emsp;
-
-<?php	if($today >= $fromDate && $today <= $toDate)
-		{
-?>			<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				
-<?php	}
+<?php				if($today >= $fromDate && $today <= $toDate)
+					{
+?>						<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				
+<?php				}
 ?>
 		<br><br>
 		<table class="responstable" style="width:65% !important;">
@@ -270,7 +214,6 @@ if(isset($_SESSION["user_name"]))
 					$percentage = round(  ($sale + $extraBags) * 100 / $spclTarget,0);
 				else
 					$percentage = 0;
-
 				$balance = $spclTarget-$sale-$extraBags;
 				if($balance < 0)
 					$balance = 0;																													?>
@@ -306,8 +249,6 @@ if(isset($_SESSION["user_name"]))
 </html>
 <?php
 }
-
 else
 	header("Location:../index.php");
-
 ?>
