@@ -1,30 +1,71 @@
 <?php
+ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+
 session_start();
 if(isset($_SESSION["user_name"]))
 {
 	require '../connect.php';
+	require '../functions/monthMap.php';
+	require 'dropDownGenerator.php';
+	
 	$today = date("Y-m-d");
 	
-	if(isset($_GET['fromDate']) && isset($_GET['toDate']))
+	if(isset($_GET['year']))
 	{
-		$fromDate = $_GET['fromDate'];
-		$toDate = $_GET['toDate'];				
+		$year = (int)$_GET['year'];		
+
+		$monthList = getMonths($year);
+		if(isset($_GET['month']))
+		{
+			$month = (int)$_GET['month'];
+			if(isset($_GET['dateString']))
+				$dateString = $_GET['dateString'];
+			else	
+			{
+				$stringList = getStrings($year,$month);					
+				$dateString = end($stringList);					
+			}				
+		}
+		else
+		{
+			$month = end($monthList);
+			$stringList = getStrings($year,$month);					
+			$dateString = end($stringList);					
+		}
 	}
 	else
 	{
-		$sqlDates = mysqli_query($con, "SELECT from_date,to_date FROM special_target_date ORDER BY to_date DESC LIMIT 1") or die(mysqli_error($con));		 
-		$dates = mysqli_fetch_array($sqlDates,MYSQLI_ASSOC);
-		$fromDate = $dates['from_date'];
-		$toDate = $dates['to_date'];		
-	}	
+		$year = (int)date("Y");	
+
+		$monthList = getMonths($year);		
+		$month = end($monthList);
+
+		$stringList = getStrings($year,$month);					
+		$dateString = end($stringList);							
+	}
 	
+	$dateArray = explode(" to ",$dateString);
+	$from = $dateArray[0];
+	$to = $dateArray[1];
+	$toString = $to.'-'.$month.'-'.$year;		
+	$toDate = date("Y-m-d",strtotime($toString));	
+	
+	$fromString = $from.'-'.$month.'-'.$year;		
+	$fromDate = date("Y-m-d",strtotime($fromString));
+		
+	$noticeFlag = false;
+	$zeroTargetMap = null;
 	$zeroTargetList = mysqli_query($con,"SELECT ar_id FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND special_target = 0") or die(mysqli_error($con));		 
 	foreach($zeroTargetList as $zeroTarget)
 	{
 		$zeroTargetMap[$zeroTarget['ar_id']] = null;
 	}
 	
-	$zeroTargetIds = implode("','",array_keys($zeroTargetMap));		
+	if($zeroTargetMap != null)
+		$zeroTargetIds = implode("','",array_keys($zeroTargetMap));		
+
+	else
+		$noticeFlag = true;	
 	
 	$arList = mysqli_query($con,"SELECT id, ar_name, mobile, shop_name FROM ar_details WHERE isActive = 1 AND id NOT IN ('$zeroTargetIds') ") or die(mysqli_error($con));		 
 	foreach($arList as $arObject)
@@ -73,6 +114,8 @@ if(isset($_SESSION["user_name"]))
 		$total = $lpp + $hdpe + $cstl - $return_bag;
 		$arSaleMap[$sale['ar_id']] = $total;
 	}
+	if($noticeFlag)
+		$dateString = null;
 ?>
 <html>
 <head>
@@ -104,17 +147,47 @@ if(isset($_SESSION["user_name"]))
 	} );
 	function refresh()
 	{
-		var range = document.getElementById("range").value;
 		var removeToday = $('#removeToday').is(':checked');
+		
+		var hrf = window.location.href;
+		hrf = hrf.slice(0,hrf.indexOf("&removeToday="));
+		
+		window.location.href = hrf + "&removeToday=" + removeToday;
+	}
+	
+	function refreshYear()
+	{
+		var year = document.getElementById("jsYear").options[document.getElementById("jsYear").selectedIndex].value;
 		
 		var hrf = window.location.href;
 		hrf = hrf.slice(0,hrf.indexOf("?"));
 		
-		$("#main").hide();
-		$("#loader").show();
+		window.location.href = hrf +"?year="+ year;
+	}	
 	
-		window.location.href = hrf +"?"+ range + "&removeToday=" + removeToday;
+	function refreshMonth()
+	{
+		var year = document.getElementById("jsYear").options[document.getElementById("jsYear").selectedIndex].value;
+		var month=document.getElementById("jsMonth").value;
+		
+		var hrf = window.location.href;
+		hrf = hrf.slice(0,hrf.indexOf("?"));
+		
+		window.location.href = hrf +"?year="+ year + "&month=" + month;
 	}
+	
+	function refreshString()
+	{
+		var year = document.getElementById("jsYear").options[document.getElementById("jsYear").selectedIndex].value;
+		var month=document.getElementById("jsMonth").value;
+		var dateString = document.getElementById("jsDateString").options[document.getElementById("jsDateString").selectedIndex].value;
+		
+		var hrf = window.location.href;
+		hrf = hrf.slice(0,hrf.indexOf("?"));
+		
+		window.location.href = hrf +"?year="+ year + "&month=" + month + "&dateString=" + dateString;
+	}
+	
 	var getUrlParameter = function getUrlParameter(sParam) {
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -127,6 +200,7 @@ if(isset($_SESSION["user_name"]))
 			}
 		}
 	};
+
 	
 	$(function(){
 	  $(".responstable tr").each(function(){
@@ -159,23 +233,60 @@ if(isset($_SESSION["user_name"]))
 			 <option value="achievement_area.php?">Area Wise</option>   								
 		</select>		
 		<br><br>
-		<select name="range" id="range" onchange="refresh();">
-			<?php						
-			$queryDates = "SELECT from_date,to_date FROM special_target_date ORDER BY to_date ASC";
-			$dates = mysqli_query($con,$queryDates);
-			while ( $row=mysqli_fetch_assoc($dates)) 
+		
+		<select id="jsYear" name="jsYear" class="textarea" onchange="return refreshYear();">
+			<option value = "<?php echo $year;?>"><?php echo $year;?></option>																									<?php	
+			$yearList = getYears();	
+
+			foreach($yearList as $yr)
 			{
-				$value = date('d-M-Y',strtotime($row['from_date'])).'&emsp;TO&emsp;'.date('d-M-Y',strtotime($row['to_date']));									
-				$urlValue = "fromDate=".$row['from_date']."&toDate=".$row['to_date']."";									?>
-			 <option <?php if($row['from_date'] == $fromDate) echo 'selected';?> value='<?php echo $urlValue;?>'><?php echo $value;?></option>   								<?php
+				if($year != $yr)
+				{																																			?>
+					<option value="<?php echo $yr;?>"><?php echo $yr;?></option>																			<?php										
+				}
+			} 			
+?>		</select>
+			&nbsp;&nbsp;
+			
+		<select id="jsMonth" name="jsMonth" class="textarea" onchange="return refreshMonth();">	
+			<option value = "<?php echo $month;?>"><?php echo getMonth($month);?></option>																						<?php	
+			if(!isset($monthList))
+				$monthList = getMonths($year);	
+			foreach($monthList as $mnth) 
+			{	
+				if($month != $mnth)
+				{																																			?>			
+					<option value="<?php echo $mnth;?>"><?php echo getMonth($mnth);?></option>																<?php						
+				}
 			}
-			?>
+	?>	</select>					
+			&nbsp;&nbsp;
+
+		<select id="jsDateString" name="jsDateString" class="textarea" onchange="return refreshString();">
+			<option value = "<?php echo $dateString;?>"><?php echo $dateString;?></option>																									<?php	
+			if(!isset($stringList))
+				$stringList = getStrings($year,$month);
+			foreach($stringList as $string) 
+			{
+				if($dateString != $string)
+				{																																															?>
+					<option value="<?php echo $string;?>"><?php echo $string;?></option>																			<?php						
+				}
+			}																																					?>
+																														
 		</select>
+		<br><br>
+		
 		&emsp;&emsp;&emsp;
-<?php				if($today >= $fromDate && $today <= $toDate)
-					{
-?>						<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				
-<?php				}
+<?php	if($today >= $fromDate && $today <= $toDate)
+		{
+?>			<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				
+<?php	}
+
+		if($noticeFlag)
+			echo '<br>SELECT THE RANGE OF SPECIAL TARGET';
+		else
+		{
 ?>
 		<br><br>
 		<table class="responstable" style="width:65% !important;">
@@ -244,6 +355,8 @@ if(isset($_SESSION["user_name"]))
 			</tr>
 		</table>
 		<br><br><br><br>
+<?php	}		
+?>
 		</div>
 </body>
 </html>
