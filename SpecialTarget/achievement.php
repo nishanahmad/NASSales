@@ -53,7 +53,6 @@ if(isset($_SESSION["user_name"]))
 	$fromString = $from.'-'.$month.'-'.$year;		
 	$fromDate = date("Y-m-d",strtotime($fromString));
 		
-	$noticeFlag = false;
 	$zeroTargetMap = null;
 	$zeroTargetList = mysqli_query($con,"SELECT ar_id FROM special_target WHERE  fromDate <= '$fromDate' AND toDate>='$toDate' AND special_target = 0") or die(mysqli_error($con));		 
 	foreach($zeroTargetList as $zeroTarget)
@@ -61,11 +60,7 @@ if(isset($_SESSION["user_name"]))
 		$zeroTargetMap[$zeroTarget['ar_id']] = null;
 	}
 	
-	if($zeroTargetMap != null)
-		$zeroTargetIds = implode("','",array_keys($zeroTargetMap));		
-
-	else
-		$noticeFlag = true;	
+	$zeroTargetIds = implode("','",array_keys($zeroTargetMap));		
 	
 	$arList = mysqli_query($con,"SELECT id, ar_name, mobile, shop_name FROM ar_details WHERE isActive = 1 AND id NOT IN ('$zeroTargetIds') ") or die(mysqli_error($con));		 
 	foreach($arList as $arObject)
@@ -277,17 +272,11 @@ if(isset($_SESSION["user_name"]))
 		</select>
 		<br><br>
 		
-		&emsp;&emsp;&emsp;
-<?php	if($today >= $fromDate && $today <= $toDate)
-		{
-?>			<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>				
-<?php	}
-
-		if($noticeFlag)
-			echo '<br>SELECT THE RANGE OF SPECIAL TARGET';
-		else
-		{
-?>
+		&emsp;&emsp;&emsp;																																		<?php	
+		if($today >= $fromDate && $today <= $toDate)
+		{																																						?>
+			<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>									<?php	
+		}																																						?>
 		<br><br>
 		<table class="responstable" style="width:65% !important;">
 			<thead>
@@ -355,8 +344,6 @@ if(isset($_SESSION["user_name"]))
 			</tr>
 		</table>
 		<br><br><br><br>
-<?php	}		
-?>
 		</div>
 </body>
 </html>
