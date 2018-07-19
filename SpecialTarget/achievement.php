@@ -278,7 +278,7 @@ if(isset($_SESSION["user_name"]))
 			<input type="checkbox" name="removeToday" id="removeToday" onchange="refresh();">Show yesterday's closing</input>									<?php	
 		}																																						?>
 		<br><br>
-		<table class="responstable" style="width:65% !important;">
+		<table class="responstable" style="width:65% !important;overflow-x:auto;"">
 			<thead>
 				<tr>
 					<th style="text-align:left;width:24%;">AR</th>
