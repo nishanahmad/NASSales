@@ -183,6 +183,7 @@ input:focus, textarea:focus {
 	}
 }
 </style>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 	<div id="form-main">
 	<div id="form-div">
